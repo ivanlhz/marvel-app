@@ -1,0 +1,16 @@
+.search-bar {
+  padding: var(--spacing-xxl) var(--spacing-xl) 0 var(--spacing-xl);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .search-bar {
+    padding: var(--spacing-lg) var(--spacing-xl) 0 var(--spacing-xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .search-bar {
+    padding: var(--spacing-md) var(--spacing-md) 0 var(--spacing-md);
+  }
+}

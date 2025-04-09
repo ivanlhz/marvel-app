@@ -1,0 +1,84 @@
+.character-card {
+  width: 100%;
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  background-color: var(--color-background-card);
+  transition: transform var(--transition-normal);
+  box-shadow: var(--box-shadow);
+  position: relative;
+}
+
+.character-card:hover {
+  transform: translateY(-5px);
+}
+
+.character-image {
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%; /* Relación de aspecto cuadrada */
+  position: relative;
+  overflow: hidden;
+}
+
+.character-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-normal);
+}
+
+.character-card:hover .character-image img {
+  transform: scale(1.05);
+}
+
+.character-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  background-color: var(--color-background-dark);
+}
+
+.character-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80%;
+}
+
+.favorite-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xs);
+  transition: transform var(--transition-fast);
+}
+
+.favorite-button:hover {
+  transform: scale(1.1);
+}
+
+.favorite-button .heart-icon {
+  width: 20px;
+  height: 20px;
+  fill: var(--color-favorite-inactive);
+  stroke: var(--color-text-primary);
+  stroke-width: 1px;
+  transition: fill var(--transition-fast);
+}
+
+.favorite-button.active .heart-icon {
+  fill: var(--color-favorite);
+  stroke: var(--color-favorite);
+}

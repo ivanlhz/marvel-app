@@ -1,0 +1,8 @@
+.result-counter {
+  padding: var(--spacing-sm) 0;
+  font-size: 12px;
+  color: var(--color-text-dark);
+  font-weight: 500;
+  text-transform: uppercase;
+  text-align: start;
+}

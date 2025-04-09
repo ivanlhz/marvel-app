@@ -1,0 +1,16 @@
+.logo {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 50px;
+  transition: transform var(--transition-fast);
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.logo img {
+  height: 100%;
+  width: auto;
+}
