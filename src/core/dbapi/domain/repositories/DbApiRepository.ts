@@ -1,3 +1,4 @@
+import { Result } from '@/core/common/result';
 import {
   Character,
   CharactersWithPagination,
@@ -5,7 +6,7 @@ import {
 } from '@/core/dbapi';
 
 export interface DbApiRepository {
-  getCharacters: (page: number, limit: number) => Promise<CharactersWithPagination>;
-  getCharacterById: (id: number) => Promise<CharacterWithTransformationsAndPlanet | null>;
-  filterCharacters: (name: string) => Promise<Character[]>;
+  getCharacters: (page: number, limit: number) => Promise<Result<CharactersWithPagination>>;
+  getCharacterById: (id: number) => Promise<Result<CharacterWithTransformationsAndPlanet>>;
+  filterCharacters: (name: string) => Promise<Result<Character[]>>;
 }
