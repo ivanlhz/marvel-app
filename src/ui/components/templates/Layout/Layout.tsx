@@ -4,7 +4,7 @@ import './Layout.css';
 
 interface LayoutProps {
   children: React.ReactNode;
-  favoriteCount: number;
+  favoriteCount?: number;
   onLogoClick?: () => void;
   onFavoritesClick?: () => void;
 }

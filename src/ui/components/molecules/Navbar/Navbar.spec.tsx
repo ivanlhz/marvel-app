@@ -35,16 +35,22 @@ jest.mock('../../atoms/HeartButton', () => ({
 
 describe('Navbar', () => {
   test('renders logo and heart button', () => {
-    render(<Navbar favoriteCount={0} />);
+    render(<Navbar onFavoritesClick={jest.fn()} />);
 
     expect(screen.getByTestId('logo')).toBeInTheDocument();
+    expect(screen.getByText('Favorites')).toBeInTheDocument();
     expect(screen.getByTestId('heart-button')).toBeInTheDocument();
+  });
+
+  test('no renders the heart button', () => {
+    render(<Navbar favoriteCount={0} />);
+    expect(screen.queryByTestId('heart-button')).not.toBeInTheDocument();
   });
 
   test('passes favoriteCount to HeartButton', () => {
     const favoriteCount = 5;
 
-    render(<Navbar favoriteCount={favoriteCount} />);
+    render(<Navbar favoriteCount={favoriteCount} onFavoritesClick={jest.fn()} />);
 
     const heartButton = screen.getByTestId('heart-button');
     expect(heartButton).toHaveAttribute('data-count', '5');
@@ -74,7 +80,7 @@ describe('Navbar', () => {
   });
 
   test('renders with active heart button', () => {
-    render(<Navbar favoriteCount={3} />);
+    render(<Navbar favoriteCount={3} onFavoritesClick={jest.fn()} />);
 
     const heartButton = screen.getByTestId('heart-button');
     expect(heartButton).toHaveAttribute('data-active', 'true');

@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react';
-import { SearchInput } from '../../atoms/SearchInput';
-import { ResultCounter } from '../../atoms/ResultCounter';
+import { SearchInput } from '@/ui/components/atoms/SearchInput';
+import { ResultCounter } from '@/ui/components/atoms/ResultCounter';
 import './SearchBar.css';
 
 interface SearchBarProps {
