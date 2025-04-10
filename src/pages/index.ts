@@ -1,1 +1,2 @@
-export * from './Home';
+export * from './character/Character';
+export * from './home/Home';

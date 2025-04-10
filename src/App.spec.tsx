@@ -4,6 +4,6 @@ import App from './App';
 describe('App', () => {
   test('renders heading', async () => {
     render(<App />);
-    expect(screen.getByText('HOLA DESDE HOME')).toBeInTheDocument();
+    expect(screen.getByText('Vision')).toBeInTheDocument();
   });
 });

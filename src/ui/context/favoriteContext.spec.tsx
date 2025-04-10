@@ -11,8 +11,8 @@ const TestComponentWithActions = () => {
   return (
     <div>
       <p>Favorite Count: {favoriteCount}</p>
-      <p>Favorite Characters: { favoriteCharacters.length ? favoriteCharacters[0] : 'Empty list'}</p>
-      <button onClick={() => setFavoriteCharacter("1aaa")}>Add</button>
+      <p>Favorite Characters: {favoriteCharacters.length ? favoriteCharacters[0] : 'Empty list'}</p>
+      <button onClick={() => setFavoriteCharacter('1aaa')}>Add</button>
     </div>
   );
 };
@@ -45,16 +45,16 @@ describe('FavoriteContext', () => {
         </FavoriteProvider>
       );
     };
-    render(<ContainerTestComponent/>)
-    const clikableButton = screen.getByText('Add')
+    render(<ContainerTestComponent />);
+    const clikableButton = screen.getByText('Add');
     // In the first iteration the favoriteCharacter list must be empty
-    expect(clikableButton).toBeInTheDocument()
-    expect(screen.getByText('Favorite Characters: Empty list')).toBeInTheDocument()
+    expect(clikableButton).toBeInTheDocument();
+    expect(screen.getByText('Favorite Characters: Empty list')).toBeInTheDocument();
     // After click the favoriteCharacter list first element must be the id "1aaa"
-    fireEvent.click(clikableButton)
-    expect(screen.getByText('Favorite Characters: 1aaa')).toBeInTheDocument()
+    fireEvent.click(clikableButton);
+    expect(screen.getByText('Favorite Characters: 1aaa')).toBeInTheDocument();
     // If click again the current element in the favoriteCharacter list must be deleted
-    fireEvent.click(clikableButton)
-    expect(screen.getByText('Favorite Characters: Empty list')).toBeInTheDocument()
+    fireEvent.click(clikableButton);
+    expect(screen.getByText('Favorite Characters: Empty list')).toBeInTheDocument();
   });
 });

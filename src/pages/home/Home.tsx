@@ -1,10 +1,10 @@
 import { useState, useEffect, ChangeEvent } from 'react';
-import { Header } from '../ui/components/organisms/Header';
-import { CharacterGrid } from '../ui/components/organisms/CharacterGrid';
-import { mockCharacters, Character } from '../mocks/characters';
+import { Header } from '@/ui/components/organisms/Header';
+import { CharacterGrid } from '@/ui/components/organisms/CharacterGrid';
+import { mockCharacters, Character } from '@/mocks/characters';
 import './Home.css';
 
-export const Home = () => {
+export const HomePage = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [filteredCharacters, setFilteredCharacters] = useState<Character[]>([]);
   const [searchValue, setSearchValue] = useState('');
