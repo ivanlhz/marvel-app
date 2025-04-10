@@ -1,3 +1,5 @@
-export const CharacterPage = () => {
+const CharacterPage = () => {
   return <div className="character-page">Character</div>;
 };
+
+export default CharacterPage

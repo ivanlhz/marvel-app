@@ -5,7 +5,7 @@ import { mockCharacters, Character } from '@/mocks/characters';
 import './Home.css';
 import { useFavoriteContext } from '@/ui/context/favoriteContext';
 
-export const HomePage = () => {
+const HomePage = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [filteredCharacters, setFilteredCharacters] = useState<Character[]>([]);
   const [searchValue, setSearchValue] = useState('');
@@ -90,3 +90,5 @@ export const HomePage = () => {
     </div>
   );
 };
+
+export default HomePage
