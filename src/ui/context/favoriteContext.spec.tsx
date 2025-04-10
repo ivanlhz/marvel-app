@@ -7,12 +7,17 @@ const TestComponent = () => {
 };
 
 const TestComponentWithActions = () => {
-  const { favoriteCount, setFavoriteCharacter, favoriteCharacters } = useFavoriteContext();
+  const { favoriteCount, addFavoriteCharacter, favoriteCharacters, setAllFavoriteCharacters } =
+    useFavoriteContext();
   return (
     <div>
       <p>Favorite Count: {favoriteCount}</p>
-      <p>Favorite Characters: {favoriteCharacters.length ? favoriteCharacters[0] : 'Empty list'}</p>
-      <button onClick={() => setFavoriteCharacter('1aaa')}>Add</button>
+      <p>
+        Favorite Characters:{' '}
+        {favoriteCharacters.length ? favoriteCharacters.join(',') : 'Empty list'}
+      </p>
+      <button onClick={() => addFavoriteCharacter('1aaa')}>Add</button>
+      <button onClick={() => setAllFavoriteCharacters(['1aaa', '2aaa', '3aaa'])}>Add All</button>
     </div>
   );
 };
@@ -56,5 +61,9 @@ describe('FavoriteContext', () => {
     // If click again the current element in the favoriteCharacter list must be deleted
     fireEvent.click(clikableButton);
     expect(screen.getByText('Favorite Characters: Empty list')).toBeInTheDocument();
+    // Add all ids to the list
+    const clikableAddAllButton = screen.getByText('Add All');
+    fireEvent.click(clikableAddAllButton);
+    expect(screen.getByText('Favorite Characters: 1aaa,2aaa,3aaa')).toBeInTheDocument();
   });
 });

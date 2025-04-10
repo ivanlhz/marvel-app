@@ -3,7 +3,8 @@ import { createContext, useContext, useState } from 'react';
 export interface FavoriteContextProps {
   favoriteCount: number;
   favoriteCharacters: string[];
-  setFavoriteCharacter: (id: string) => void;
+  addFavoriteCharacter: (id: string) => void;
+  setAllFavoriteCharacters: (ids: string[]) => void;
 }
 
 export const FavoriteContext = createContext<FavoriteContextProps | null>(null);
@@ -12,7 +13,7 @@ export const FavoriteProvider = ({ children }: { children: React.ReactNode }) =>
   const [favoriteCharacters, setFavoriteCharacters] = useState<string[]>([]);
   const favoriteCount = favoriteCharacters.length;
 
-  const setFavoriteCharacter = (id: string) => {
+  const addFavoriteCharacter = (id: string) => {
     if (favoriteCharacters.includes(id)) {
       setFavoriteCharacters(prev => prev.filter(charId => charId !== id));
     } else {
@@ -20,8 +21,14 @@ export const FavoriteProvider = ({ children }: { children: React.ReactNode }) =>
     }
   };
 
+  const setAllFavoriteCharacters = (ids: string[]) => {
+    setFavoriteCharacters(ids);
+  };
+
   return (
-    <FavoriteContext value={{ favoriteCount, favoriteCharacters, setFavoriteCharacter }}>
+    <FavoriteContext
+      value={{ favoriteCount, favoriteCharacters, addFavoriteCharacter, setAllFavoriteCharacters }}
+    >
       {children}
     </FavoriteContext>
   );

@@ -3,18 +3,19 @@ import { Header } from '@/ui/components/organisms/Header';
 import { CharacterGrid } from '@/ui/components/organisms/CharacterGrid';
 import { mockCharacters, Character } from '@/mocks/characters';
 import './Home.css';
+import { useFavoriteContext } from '@/ui/context/favoriteContext';
 
 export const HomePage = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [filteredCharacters, setFilteredCharacters] = useState<Character[]>([]);
   const [searchValue, setSearchValue] = useState('');
-  const [favoriteCount, setFavoriteCount] = useState(0);
+  const { favoriteCount, addFavoriteCharacter, setAllFavoriteCharacters } = useFavoriteContext();
 
   useEffect(() => {
     setCharacters(mockCharacters);
     setFilteredCharacters(mockCharacters);
-    const initialFavorites = mockCharacters.filter(char => char.isFavorite).length;
-    setFavoriteCount(initialFavorites);
+    const initialFavorites = mockCharacters.filter(char => char.isFavorite);
+    setAllFavoriteCharacters(initialFavorites.map(({ id }) => id));
   }, []);
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -55,9 +56,7 @@ export const HomePage = () => {
     });
 
     setFilteredCharacters(updatedFiltered);
-
-    const newFavoriteCount = updatedCharacters.filter(char => char.isFavorite).length;
-    setFavoriteCount(newFavoriteCount);
+    addFavoriteCharacter(id);
   };
 
   const handleLogoClick = () => {
