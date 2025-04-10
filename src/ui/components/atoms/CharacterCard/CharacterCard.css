@@ -6,11 +6,11 @@
   box-shadow: var(--box-shadow);
   position: relative;
   clip-path: polygon(
-    0% 0%,        /* Esquina superior izquierda */
-    100% 0%,      /* Esquina superior derecha */
-    100% 93%,     /* Punto en el borde derecho */
-    90% 100%,     /* Punto en el borde inferior */
-    0% 100%       /* Esquina inferior izquierda */
+    0% 0%,
+    /* Esquina superior izquierda */ 100% 0%,
+    /* Esquina superior derecha */ 100% 93%,
+    /* Punto en el borde derecho */ 90% 100%,
+    /* Punto en el borde inferior */ 0% 100% /* Esquina inferior izquierda */
   );
 }
 
@@ -101,14 +101,18 @@
   stroke-width: 1px;
   transition: fill var(--transition-fast);
 }
+.favorite-button .heart-icon.outline {
+  fill: white;
+  stroke: white;
+  transition: all 0.2s ease;
+}
 
-.favorite-button.active .heart-icon {
+.favorite-button.active .heart-icon.filled {
   fill: var(--color-favorite);
-  stroke: var(--color-favorite);
+  stroke-width: 0;
+  transition: all 0.2s ease;
 }
 
-.character-card:hover .favorite-button.active .heart-icon {
+.character-card:hover .favorite-button.active .heart-icon.filled {
   fill: var(--color-text-primary);
-  stroke: var(--color-text-primary);
 }
-

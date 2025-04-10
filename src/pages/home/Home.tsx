@@ -27,7 +27,6 @@ const HomePage = ({ showAllCharacters, handleShowAllCharacters }: HomePageProps)
     return !searchValue ? charactersQuery?.meta.totalItems : filteredCharacters.length;
   };
 
-  console.log(showAllCharacters);
   useEffect(() => {
     if (charactersQuery && !searchValue.length && showAllCharacters) {
       setFilteredCharacters(charactersQuery.items);

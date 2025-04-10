@@ -20,9 +20,10 @@ export const HeartButton: React.FC<HeartButtonProps> = ({
       onClick={onClick}
       aria-label={active ? 'Quitar de favoritos' : 'Añadir a favoritos'}
     >
-      <svg viewBox="0 0 24 24" className="heart-icon">
-        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+      <svg width="24" height="22" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 3.80348L6 0.161865L0 3.80348V11.607L12 21.8382L24 11.607V3.80348L18 0.161865L12 3.80348Z" fill="#EC1D24"/>
       </svg>
+
       {showCount && <span className="heart-count">{count}</span>}
     </button>
   );
