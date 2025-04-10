@@ -14,6 +14,7 @@ export default {
     'src/**/*.{ts,tsx}',
     '!src/**/index.{ts,tsx}',
     '!src/**/*.d.ts',
+    '!src/routes.ts',
     '!src/main.tsx',
     '!src/App.tsx',
     '!**/*.spec.{ts,tsx}',
