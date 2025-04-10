@@ -2,7 +2,7 @@ import { Planet } from './Planet';
 import { Transformation } from './Transformation';
 
 export interface Character {
-  id: number;
+  id: string;
   name: string;
   ki: string;
   maxKi: string;

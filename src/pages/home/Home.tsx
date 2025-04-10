@@ -1,94 +1,106 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import { CharacterGrid } from '@/ui/components/organisms/CharacterGrid';
-import { mockCharacters, Character } from '@/mocks/characters';
 import './Home.css';
 import { useFavoriteContext } from '@/ui/context/favoriteContext';
 import { SearchBar } from '@/ui/components/molecules/SearchBar';
+import { useCharacters, useFilterCharacters } from '@/ui/hooks/queries/useCharacters';
+import { Character } from '@/core/dbapi';
 
 interface HomePageProps {
   showAllCharacters: boolean;
+  handleShowAllCharacters: () => void;
 }
 
-const HomePage = ({ showAllCharacters }: HomePageProps) => {
-  const [characters, setCharacters] = useState<Character[]>([]);
+const HomePage = ({ showAllCharacters, handleShowAllCharacters }: HomePageProps) => {
   const [filteredCharacters, setFilteredCharacters] = useState<Character[]>([]);
   const [searchValue, setSearchValue] = useState('');
-  const { addFavoriteCharacter, setAllFavoriteCharacters } = useFavoriteContext();
+  const [currentPage, setCurrentPage] = useState(1);
+  const { addFavoriteCharacter, favoriteCharacters, favoriteCount } = useFavoriteContext();
+
+  const { data: charactersQuery } = useCharacters(currentPage, 50);
+  const { data: searchQuery } = useFilterCharacters(searchValue);
+
+  const getResultCount = () => {
+    if (!showAllCharacters) {
+      return favoriteCount;
+    }
+    return !searchValue ? charactersQuery?.meta.totalItems : filteredCharacters.length;
+  };
+
+  console.log(showAllCharacters);
+  useEffect(() => {
+    if (charactersQuery && !searchValue.length && showAllCharacters) {
+      setFilteredCharacters(charactersQuery.items);
+    }
+  }, [charactersQuery, searchValue, showAllCharacters]);
 
   useEffect(() => {
-    setCharacters(mockCharacters);
-    setFilteredCharacters(mockCharacters);
-    const initialFavorites = mockCharacters.filter(char => char.isFavorite);
-    setAllFavoriteCharacters(initialFavorites.map(({ id }) => id));
-  }, []);
+    if (searchValue.length && searchQuery) {
+      setFilteredCharacters(searchQuery);
+    }
+  }, [searchQuery, searchValue]);
 
   useEffect(() => {
     if (!showAllCharacters) {
-      const onlyFavorites = characters.filter(char => char.isFavorite);
-      setFilteredCharacters(onlyFavorites);
-    } else if (searchValue === '') {
-      setFilteredCharacters(characters);
-    } else {
-      const filtered = characters.filter(character =>
-        character.name.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      setFilteredCharacters(filtered);
+      setFilteredCharacters(favoriteCharacters);
     }
-  }, [showAllCharacters, characters, searchValue]);
+    setSearchValue('');
+  }, [showAllCharacters, favoriteCharacters]);
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchValue(value);
-
-    if (value.trim() === '') {
-      setFilteredCharacters(
-        showAllCharacters ? characters : characters.filter(char => char.isFavorite)
-      );
-    } else {
-      const filtered = characters.filter(character =>
-        character.name.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredCharacters(filtered);
-    }
   };
 
   const handleFavoriteToggle = (id: string) => {
-    const updatedCharacters = characters.map(character => {
+    filteredCharacters.forEach(character => {
       if (character.id === id) {
-        return {
-          ...character,
-          isFavorite: !character.isFavorite,
-        };
+        addFavoriteCharacter(character);
       }
       return character;
     });
+  };
 
-    setCharacters(updatedCharacters);
+  const handlePagination = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
 
-    const updatedFiltered = filteredCharacters.map(character => {
-      if (character.id === id) {
-        return {
-          ...character,
-          isFavorite: !character.isFavorite,
-        };
-      }
-      return character;
-    });
-
-    setFilteredCharacters(updatedFiltered);
-    addFavoriteCharacter(id);
+  const clearSearchValue = () => {
+    setSearchValue('');
+    handleShowAllCharacters();
   };
 
   return (
     <div className="home-container">
       <SearchBar
         searchValue={searchValue}
-        resultCount={filteredCharacters.length}
+        resultCount={getResultCount() || 0}
         onSearchChange={handleSearchChange}
+        onClearClick={clearSearchValue}
       />
       <main className="main-content">
-        <CharacterGrid characters={filteredCharacters} onFavoriteToggle={handleFavoriteToggle} />
+        <CharacterGrid
+          characters={filteredCharacters}
+          onFavoriteToggle={handleFavoriteToggle}
+          favoriteIds={favoriteCharacters.map(({ id }) => id)}
+        />
       </main>
+      {!searchValue && charactersQuery && (
+        <div className="pagination">
+          <button disabled={currentPage === 1} onClick={() => handlePagination(currentPage - 1)}>
+            Anterior
+          </button>
+          <span>
+            Página {currentPage} de {charactersQuery.meta.totalPages}
+          </span>
+          <button
+            disabled={currentPage === charactersQuery.meta.totalPages}
+            onClick={() => handlePagination(currentPage + 1)}
+          >
+            Siguiente
+          </button>
+        </div>
+      )}
     </div>
   );
 };

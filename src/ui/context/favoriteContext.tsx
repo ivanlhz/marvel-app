@@ -1,28 +1,29 @@
+import { Character } from '@/core/dbapi';
 import { createContext, useContext, useState } from 'react';
 
 export interface FavoriteContextProps {
   favoriteCount: number;
-  favoriteCharacters: string[];
-  addFavoriteCharacter: (id: string) => void;
-  setAllFavoriteCharacters: (ids: string[]) => void;
+  favoriteCharacters: Character[];
+  addFavoriteCharacter: (character: Character) => void;
+  setAllFavoriteCharacters: (character: Character[]) => void;
 }
 
 export const FavoriteContext = createContext<FavoriteContextProps | null>(null);
 
 export const FavoriteProvider = ({ children }: { children: React.ReactNode }) => {
-  const [favoriteCharacters, setFavoriteCharacters] = useState<string[]>([]);
+  const [favoriteCharacters, setFavoriteCharacters] = useState<Character[]>([]);
   const favoriteCount = favoriteCharacters.length;
 
-  const addFavoriteCharacter = (id: string) => {
-    if (favoriteCharacters.includes(id)) {
-      setFavoriteCharacters(prev => prev.filter(charId => charId !== id));
+  const addFavoriteCharacter = (character: Character) => {
+    if (favoriteCharacters.find(char => char.id === character.id)) {
+      setFavoriteCharacters(prev => prev.filter(char => char.id !== character.id));
     } else {
-      setFavoriteCharacters(prev => [...prev, id]);
+      setFavoriteCharacters(prev => [...prev, character]);
     }
   };
 
-  const setAllFavoriteCharacters = (ids: string[]) => {
-    setFavoriteCharacters(ids);
+  const setAllFavoriteCharacters = (characters: Character[]) => {
+    setFavoriteCharacters(characters);
   };
 
   return (

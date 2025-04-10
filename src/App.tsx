@@ -11,23 +11,31 @@ function AppContent() {
   const location = useLocation();
   const isNotFoundPage = !['/', '/character'].includes(location.pathname);
 
-  const handleLogoClick = useCallback(() => {
+  const handleShowAllCharacters = useCallback(() => {
     setShowAllCharacters(true);
   }, []);
 
-  const handleFavoritesClick = useCallback(() => {
-    setShowAllCharacters(prevState => !prevState);
+  const handleHideAllCharacters = useCallback(() => {
+    setShowAllCharacters(false);
   }, []);
 
   return (
     <Layout
       favoriteCount={isNotFoundPage ? undefined : favoriteCount}
-      onLogoClick={handleLogoClick}
-      onFavoritesClick={isNotFoundPage ? undefined : handleFavoritesClick}
+      onLogoClick={handleShowAllCharacters}
+      onFavoritesClick={isNotFoundPage ? undefined : handleHideAllCharacters}
     >
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
-          <Route path="/" element={<HomePage showAllCharacters={showAllCharacters} />} />
+          <Route
+            path="/"
+            element={
+              <HomePage
+                showAllCharacters={showAllCharacters}
+                handleShowAllCharacters={handleShowAllCharacters}
+              />
+            }
+          />
           <Route path="/character" element={<CharacterPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

@@ -1,29 +1,27 @@
 import React from 'react';
 import { CharacterCard } from '../../atoms/CharacterCard';
 import './CharacterGrid.css';
-
-// Definimos la interfaz para un personaje
-interface Character {
-  id: string;
-  name: string;
-  imageUrl: string;
-  isFavorite?: boolean;
-}
+import { Character } from '@/core/dbapi';
 
 interface CharacterGridProps {
   characters: Character[];
   onFavoriteToggle: (id: string) => void;
+  favoriteIds: string[];
 }
 
-export const CharacterGrid: React.FC<CharacterGridProps> = ({ characters, onFavoriteToggle }) => {
+export const CharacterGrid: React.FC<CharacterGridProps> = ({
+  characters,
+  onFavoriteToggle,
+  favoriteIds,
+}) => {
   return (
     <div className="character-grid" data-testid="character-grid">
       {characters.map(character => (
         <div key={character.id} className="character-grid-item">
           <CharacterCard
-            imageUrl={character.imageUrl}
+            imageUrl={character.image}
             name={character.name}
-            isFavorite={character.isFavorite}
+            isFavorite={favoriteIds.includes(character.id)}
             onFavoriteToggle={() => onFavoriteToggle(character.id)}
           />
         </div>

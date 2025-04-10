@@ -5,12 +5,14 @@ interface SearchInputProps {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
+  onClearClick: () => void;
 }
 
 export const SearchInput: React.FC<SearchInputProps> = ({
   value,
   onChange,
   placeholder = 'SEARCH A CHARACTER...',
+  onClearClick,
 }) => {
   return (
     <div className="search-input-container">
@@ -26,6 +28,11 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         onChange={onChange}
         placeholder={placeholder}
       />
+      {value.length && (
+        <span className="close-icon" data-testid="close-icon" onClick={onClearClick}>
+          X
+        </span>
+      )}
     </div>
   );
 };

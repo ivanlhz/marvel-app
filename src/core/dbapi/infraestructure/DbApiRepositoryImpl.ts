@@ -7,7 +7,7 @@ import {
 import { fetchData } from '@/core/common/fetchData';
 import { Result } from '@/core/common/result';
 
-const BASE_URL = 'https://web.dragonball-api.com/api';
+const BASE_URL = 'https://dragonball-api.com/api';
 
 export const createDbApiRepository = (): DbApiRepository => {
   const getCharacters = async (
