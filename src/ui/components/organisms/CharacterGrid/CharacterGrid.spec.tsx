@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { CharacterGrid } from './CharacterGrid';
-import { Character } from '@/mocks/characters';
+import { Character } from '@/core/dbapi';
 
 jest.mock('../../atoms/CharacterCard', () => ({
   CharacterCard: ({
@@ -29,20 +29,35 @@ describe('CharacterGrid', () => {
     {
       id: '1',
       name: 'Iron Man',
-      imageUrl: 'https://example.com/ironman.jpg',
-      isFavorite: true,
+      image: 'https://example.com/ironman.jpg',
+      description: 'Genius inventor Tony Stark',
+      ki: '5000',
+      maxKi: '10000',
+      race: 'Human',
+      gender: 'Male',
+      affiliation: 'Avengers',
     },
     {
       id: '2',
       name: 'Thor',
-      imageUrl: 'https://example.com/thor.jpg',
-      isFavorite: false,
+      image: 'https://example.com/thor.jpg',
+      description: 'God of Thunder from Asgard',
+      ki: '5000',
+      maxKi: '10000',
+      race: 'Human',
+      gender: 'Male',
+      affiliation: 'Avengers',
     },
     {
       id: '3',
       name: 'Hulk',
-      imageUrl: 'https://example.com/hulk.jpg',
-      isFavorite: false,
+      image: 'https://example.com/hulk.jpg',
+      description: 'Scientist Bruce Banner transforms into the Hulk',
+      ki: '5000',
+      maxKi: '10000',
+      race: 'Human',
+      gender: 'Male',
+      affiliation: 'Avengers',
     },
   ];
 

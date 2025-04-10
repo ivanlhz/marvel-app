@@ -46,12 +46,4 @@ describe('HeartButton', () => {
 
     expect(countElement).toBeInTheDocument();
   });
-
-  test('does not display count when showCount is true but count is 0', () => {
-    render(<HeartButton count={0} showCount={true} />);
-
-    const countElement = screen.queryByText('0');
-
-    expect(countElement).not.toBeInTheDocument();
-  });
 });

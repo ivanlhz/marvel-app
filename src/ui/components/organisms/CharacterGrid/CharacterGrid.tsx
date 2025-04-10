@@ -6,7 +6,7 @@ import { Character } from '@/core/dbapi';
 interface CharacterGridProps {
   characters: Character[];
   onFavoriteToggle: (id: string) => void;
-  favoriteIds: string[];
+  favoriteIds?: string[];
 }
 
 export const CharacterGrid: React.FC<CharacterGridProps> = ({
@@ -21,7 +21,7 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({
           <CharacterCard
             imageUrl={character.image}
             name={character.name}
-            isFavorite={favoriteIds.includes(character.id)}
+            isFavorite={favoriteIds?.includes(character.id)}
             onFavoriteToggle={() => onFavoriteToggle(character.id)}
           />
         </div>

@@ -55,13 +55,13 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 6px; /* Altura de la línea roja inicial */
+  height: 6px;
   background-color: var(--color-favorite);
   transition: height 0.3s ease;
   z-index: 1;
 }
 .character-card:hover .character-info::before {
-  height: 100%; /* La línea roja se expande para cubrir todo */
+  height: 100%;
 }
 
 .character-name {
@@ -101,6 +101,7 @@
   stroke-width: 1px;
   transition: fill var(--transition-fast);
 }
+
 .favorite-button .heart-icon.outline {
   fill: white;
   stroke: white;

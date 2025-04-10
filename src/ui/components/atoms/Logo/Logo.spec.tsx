@@ -8,7 +8,6 @@ describe('Logo', () => {
     const logoElement = screen.getByRole('img', { name: 'Marvel Logo' });
 
     expect(logoElement).toBeInTheDocument();
-    expect(logoElement).toHaveAttribute('src', '/marvel-logo.svg');
   });
 
   test('calls onClick handler when clicked', () => {

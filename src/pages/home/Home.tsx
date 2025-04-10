@@ -1,10 +1,10 @@
-import { useState, useEffect, ChangeEvent } from 'react';
+import { useEffect } from 'react';
 import { CharacterGrid } from '@/ui/components/organisms/CharacterGrid';
 import './Home.css';
 import { useFavoriteContext } from '@/ui/context/favoriteContext';
 import { SearchBar } from '@/ui/components/molecules/SearchBar';
-import { useCharacters, useFilterCharacters } from '@/ui/hooks/queries/useCharacters';
-import { Character } from '@/core/dbapi';
+import { usePagination } from '@/ui/hooks/pagination/usePagination';
+import { useCharacterManagement } from '@/ui/hooks/useCharacterManagement';
 
 interface HomePageProps {
   showAllCharacters: boolean;
@@ -12,60 +12,33 @@ interface HomePageProps {
 }
 
 const HomePage = ({ showAllCharacters, handleShowAllCharacters }: HomePageProps) => {
-  const [filteredCharacters, setFilteredCharacters] = useState<Character[]>([]);
-  const [searchValue, setSearchValue] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const { addFavoriteCharacter, favoriteCharacters, favoriteCount } = useFavoriteContext();
+  const { addFavoriteCharacter, favoriteCharacters } = useFavoriteContext();
+  const { currentPage, goNextPage, goBackPage } = usePagination();
 
-  const { data: charactersQuery } = useCharacters(currentPage, 50);
-  const { data: searchQuery } = useFilterCharacters(searchValue);
-
-  const getResultCount = () => {
-    if (!showAllCharacters) {
-      return favoriteCount;
-    }
-    return !searchValue ? charactersQuery?.meta.totalItems : filteredCharacters.length;
-  };
-
-  useEffect(() => {
-    if (charactersQuery && !searchValue.length && showAllCharacters) {
-      setFilteredCharacters(charactersQuery.items);
-    }
-  }, [charactersQuery, searchValue, showAllCharacters]);
-
-  useEffect(() => {
-    if (searchValue.length && searchQuery) {
-      setFilteredCharacters(searchQuery);
-    }
-  }, [searchQuery, searchValue]);
+  const {
+    filteredCharacters,
+    searchValue,
+    clearSearchValue,
+    handleSearchChange,
+    charactersQuery,
+    resultCount,
+  } = useCharacterManagement(currentPage, showAllCharacters, favoriteCharacters);
 
   useEffect(() => {
     if (!showAllCharacters) {
-      setFilteredCharacters(favoriteCharacters);
+      clearSearchValue();
     }
-    setSearchValue('');
-  }, [showAllCharacters, favoriteCharacters]);
-
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchValue(value);
-  };
+  }, [showAllCharacters, clearSearchValue]);
 
   const handleFavoriteToggle = (id: string) => {
-    filteredCharacters.forEach(character => {
-      if (character.id === id) {
-        addFavoriteCharacter(character);
-      }
-      return character;
-    });
+    const character = filteredCharacters.find(character => character.id === id);
+    if (character) {
+      addFavoriteCharacter(character);
+    }
   };
 
-  const handlePagination = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
-
-  const clearSearchValue = () => {
-    setSearchValue('');
+  const handleClearSearch = () => {
+    clearSearchValue();
     handleShowAllCharacters();
   };
 
@@ -73,9 +46,9 @@ const HomePage = ({ showAllCharacters, handleShowAllCharacters }: HomePageProps)
     <div className="home-container">
       <SearchBar
         searchValue={searchValue}
-        resultCount={getResultCount() || 0}
+        resultCount={resultCount}
         onSearchChange={handleSearchChange}
-        onClearClick={clearSearchValue}
+        onClearClick={handleClearSearch}
       />
       <main className="main-content">
         <CharacterGrid
@@ -86,16 +59,13 @@ const HomePage = ({ showAllCharacters, handleShowAllCharacters }: HomePageProps)
       </main>
       {!searchValue && charactersQuery && (
         <div className="pagination">
-          <button disabled={currentPage === 1} onClick={() => handlePagination(currentPage - 1)}>
+          <button disabled={currentPage === 1} onClick={goBackPage}>
             Anterior
           </button>
           <span>
             Página {currentPage} de {charactersQuery.meta.totalPages}
           </span>
-          <button
-            disabled={currentPage === charactersQuery.meta.totalPages}
-            onClick={() => handlePagination(currentPage + 1)}
-          >
+          <button disabled={currentPage === charactersQuery.meta.totalPages} onClick={goNextPage}>
             Siguiente
           </button>
         </div>

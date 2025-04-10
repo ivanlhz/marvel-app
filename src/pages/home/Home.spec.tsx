@@ -1,9 +1,64 @@
+import React, { useState } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { FavoriteProvider } from '@/ui/context/favoriteContext';
 import HomePage from './Home';
 import { Character, mockCharacters } from '@/mocks/characters';
 import { ChangeEvent } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+// Mock del hook useCharacterManagement
+jest.mock('@/ui/hooks/useCharacterManagement', () => ({
+  useCharacterManagement: (currentPage: number, showAllCharacters: boolean) => {
+    const [searchVal, setSearchVal] = useState('');
+
+    // Determinamos los personajes filtrados según los criterios
+    const getFilteredCharacters = () => {
+      // Primero filtramos por favoritos si es necesario
+      let characters = showAllCharacters
+        ? mockCharacters
+        : mockCharacters.filter(char => char.isFavorite);
+
+      // Aplicamos filtro de búsqueda si hay un valor
+      if (searchVal && showAllCharacters) {
+        characters = characters.filter(char =>
+          char.name.toLowerCase().includes(searchVal.toLowerCase())
+        );
+      }
+
+      return characters;
+    };
+
+    const filteredCharacters = getFilteredCharacters();
+    const favoritesCount = mockCharacters.filter(char => char.isFavorite).length;
+
+    return {
+      filteredCharacters,
+      searchValue: searchVal,
+      clearSearchValue: () => setSearchVal(''),
+      handleSearchChange: (e: ChangeEvent<HTMLInputElement>) => setSearchVal(e.target.value),
+      charactersQuery: {
+        items: mockCharacters,
+        meta: {
+          totalItems: mockCharacters.length,
+          totalPages: 1,
+          currentPage,
+        },
+      },
+      resultCount: !showAllCharacters ? favoritesCount : filteredCharacters.length,
+    };
+  },
+}));
+
+// Mock de los hooks de paginación
+jest.mock('@/ui/hooks/pagination/usePagination', () => ({
+  usePagination: () => ({
+    currentPage: 1,
+    goNextPage: jest.fn(),
+    goBackPage: jest.fn(),
+  }),
+}));
+
+// Mock del componente CharacterGrid
 jest.mock('@/ui/components/organisms/CharacterGrid', () => ({
   CharacterGrid: ({
     characters,
@@ -11,21 +66,39 @@ jest.mock('@/ui/components/organisms/CharacterGrid', () => ({
   }: {
     characters: Character[];
     onFavoriteToggle: (id: string) => void;
-  }) => (
-    <div data-testid="character-grid">
-      {characters.map((character: Character) => (
-        <div key={character.id} data-testid={`character-${character.id}`}>
-          <span>{character.name}</span>
-          <button
-            data-testid={`favorite-button-${character.id}`}
-            onClick={() => onFavoriteToggle(character.id)}
-          >
-            {character.isFavorite ? 'Quitar de favoritos' : 'Añadir a favoritos'}
-          </button>
-        </div>
-      ))}
-    </div>
-  ),
+  }) => {
+    // Usamos un estado local para simular el cambio de estado de favorito
+    const [favorites, setFavorites] = useState<Record<string, boolean>>({});
+
+    const handleFavoriteToggle = (id: string) => {
+      setFavorites(prev => ({
+        ...prev,
+        [id]: !prev[id],
+      }));
+      onFavoriteToggle(id);
+    };
+
+    return (
+      <div data-testid="character-grid">
+        {characters.map((character: Character) => {
+          const isFavorite =
+            favorites[character.id] !== undefined ? favorites[character.id] : character.isFavorite;
+
+          return (
+            <div key={character.id} data-testid={`character-${character.id}`}>
+              <span>{character.name}</span>
+              <button
+                data-testid={`favorite-button-${character.id}`}
+                onClick={() => handleFavoriteToggle(character.id)}
+              >
+                {isFavorite ? 'Quitar de favoritos' : 'Añadir a favoritos'}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    );
+  },
 }));
 
 jest.mock('@/ui/components/molecules/SearchBar', () => ({
@@ -33,10 +106,12 @@ jest.mock('@/ui/components/molecules/SearchBar', () => ({
     searchValue,
     resultCount,
     onSearchChange,
+    onClearClick,
   }: {
     searchValue: string;
     resultCount: number;
     onSearchChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    onClearClick?: () => void;
   }) => (
     <div data-testid="search-bar">
       <input
@@ -46,15 +121,33 @@ jest.mock('@/ui/components/molecules/SearchBar', () => ({
         placeholder="Buscar personajes"
       />
       <span data-testid="result-count">{resultCount} resultados</span>
+      {onClearClick && (
+        <button data-testid="clear-button" onClick={onClearClick}>
+          Limpiar
+        </button>
+      )}
     </div>
   ),
 }));
 
-const renderHomePage = (props = { showAllCharacters: true }) => {
+// Crear una instancia de QueryClient para los tests
+const createTestQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
+const renderHomePage = (props = { showAllCharacters: true, handleShowAllCharacters: () => {} }) => {
+  const testQueryClient = createTestQueryClient();
   return render(
-    <FavoriteProvider>
-      <HomePage {...props} />
-    </FavoriteProvider>
+    <QueryClientProvider client={testQueryClient}>
+      <FavoriteProvider>
+        <HomePage {...props} />
+      </FavoriteProvider>
+    </QueryClientProvider>
   );
 };
 
@@ -75,7 +168,7 @@ describe('HomePage', () => {
   });
 
   test('shows only favorite characters when showAllCharacters is false', () => {
-    renderHomePage({ showAllCharacters: false });
+    renderHomePage({ showAllCharacters: false, handleShowAllCharacters: () => {} });
 
     const favoritesCount = mockCharacters.filter(char => char.isFavorite).length;
 

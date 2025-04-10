@@ -12,7 +12,7 @@ jest.mock('@/core/common/fetchData', () => ({
 
 import { fetchData } from '@/core/common/fetchData';
 
-const BASE_URL = 'https://web.dragonball-api.com/api';
+const BASE_URL = 'https://dragonball-api.com/api';
 
 describe('DbApiRepository', () => {
   const repository = createDbApiRepository();
@@ -29,7 +29,7 @@ describe('DbApiRepository', () => {
         value: {
           items: [
             {
-              id: 1,
+              id: '1',
               name: 'Goku',
               ki: '50000',
               maxKi: '100000',
@@ -80,7 +80,7 @@ describe('DbApiRepository', () => {
         isError: false,
         isSuccess: true,
         value: {
-          id: 1,
+          id: '1',
           name: 'Goku',
           ki: '50000',
           maxKi: '100000',
@@ -91,14 +91,14 @@ describe('DbApiRepository', () => {
           affiliation: 'Z Warriors',
           transformations: [
             {
-              id: 1,
+              id: '1',
               name: 'Super Saiyan',
               image: 'ssj.jpg',
               ki: '150000',
             },
           ],
           originPlanet: {
-            id: 1,
+            id: '1',
             name: 'Planeta Vegeta',
             isDestroyed: true,
             description: 'Planeta de origen de los Saiyans',
@@ -132,7 +132,7 @@ describe('DbApiRepository', () => {
         isSuccess: true,
         value: [
           {
-            id: 1,
+            id: '1',
             name: 'Goku',
             ki: '50000',
             maxKi: '100000',

@@ -1,5 +1,5 @@
 export interface Transformation {
-  id: number;
+  id: string;
   name: string;
   image: string;
   ki: string;

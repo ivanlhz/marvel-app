@@ -1,5 +1,5 @@
 export interface Planet {
-  id: number;
+  id: string;
   name: string;
   isDestroyed: boolean;
   description: string;
