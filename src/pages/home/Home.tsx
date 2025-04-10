@@ -1,15 +1,19 @@
 import { useState, useEffect, ChangeEvent } from 'react';
-import { Header } from '@/ui/components/organisms/Header';
 import { CharacterGrid } from '@/ui/components/organisms/CharacterGrid';
 import { mockCharacters, Character } from '@/mocks/characters';
 import './Home.css';
 import { useFavoriteContext } from '@/ui/context/favoriteContext';
+import { SearchBar } from '@/ui/components/molecules/SearchBar';
 
-const HomePage = () => {
+interface HomePageProps {
+  showAllCharacters: boolean;
+}
+
+const HomePage = ({ showAllCharacters }: HomePageProps) => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [filteredCharacters, setFilteredCharacters] = useState<Character[]>([]);
   const [searchValue, setSearchValue] = useState('');
-  const { favoriteCount, addFavoriteCharacter, setAllFavoriteCharacters } = useFavoriteContext();
+  const { addFavoriteCharacter, setAllFavoriteCharacters } = useFavoriteContext();
 
   useEffect(() => {
     setCharacters(mockCharacters);
@@ -18,12 +22,28 @@ const HomePage = () => {
     setAllFavoriteCharacters(initialFavorites.map(({ id }) => id));
   }, []);
 
+  useEffect(() => {
+    if (!showAllCharacters) {
+      const onlyFavorites = characters.filter(char => char.isFavorite);
+      setFilteredCharacters(onlyFavorites);
+    } else if (searchValue === '') {
+      setFilteredCharacters(characters);
+    } else {
+      const filtered = characters.filter(character =>
+        character.name.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setFilteredCharacters(filtered);
+    }
+  }, [showAllCharacters, characters, searchValue]);
+
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchValue(value);
 
     if (value.trim() === '') {
-      setFilteredCharacters(characters);
+      setFilteredCharacters(
+        showAllCharacters ? characters : characters.filter(char => char.isFavorite)
+      );
     } else {
       const filtered = characters.filter(character =>
         character.name.toLowerCase().includes(value.toLowerCase())
@@ -59,29 +79,11 @@ const HomePage = () => {
     addFavoriteCharacter(id);
   };
 
-  const handleLogoClick = () => {
-    setSearchValue('');
-    setFilteredCharacters(characters);
-  };
-
-  const handleFavoritesClick = () => {
-    if (searchValue === '' && filteredCharacters.length === characters.length) {
-      const onlyFavorites = characters.filter(char => char.isFavorite);
-      setFilteredCharacters(onlyFavorites);
-    } else {
-      setSearchValue('');
-      setFilteredCharacters(characters);
-    }
-  };
-
   return (
     <div className="home-container">
-      <Header
-        favoriteCount={favoriteCount}
+      <SearchBar
         searchValue={searchValue}
         resultCount={filteredCharacters.length}
-        onLogoClick={handleLogoClick}
-        onFavoritesClick={handleFavoritesClick}
         onSearchChange={handleSearchChange}
       />
       <main className="main-content">
@@ -91,4 +93,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage
+export default HomePage;

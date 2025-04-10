@@ -26,11 +26,11 @@ export const FavoriteProvider = ({ children }: { children: React.ReactNode }) =>
   };
 
   return (
-    <FavoriteContext
+    <FavoriteContext.Provider
       value={{ favoriteCount, favoriteCharacters, addFavoriteCharacter, setAllFavoriteCharacters }}
     >
       {children}
-    </FavoriteContext>
+    </FavoriteContext.Provider>
   );
 };
 
