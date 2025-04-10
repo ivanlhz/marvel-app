@@ -7,7 +7,7 @@ interface LogoProps {
 
 export const Logo: React.FC<LogoProps> = ({ onClick }) => {
   return (
-    <div className="logo" onClick={onClick}>
+    <div className="logo" onClick={onClick} data-testid="logo">
       <img src="/marvel-logo.svg" alt="Marvel Logo" />
     </div>
   );

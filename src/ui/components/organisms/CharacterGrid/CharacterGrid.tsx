@@ -17,7 +17,7 @@ interface CharacterGridProps {
 
 export const CharacterGrid: React.FC<CharacterGridProps> = ({ characters, onFavoriteToggle }) => {
   return (
-    <div className="character-grid">
+    <div className="character-grid" data-testid="character-grid">
       {characters.map(character => (
         <div key={character.id} className="character-grid-item">
           <CharacterCard

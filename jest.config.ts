@@ -15,6 +15,7 @@ export default {
     '!src/**/index.{ts,tsx}',
     '!src/**/*.d.ts',
     '!src/main.tsx',
+    '!src/App.tsx',
     '!**/*.spec.{ts,tsx}',
     '!**/*.test.{ts,tsx}',
     '!**/*.mock.{ts,tsx}',
