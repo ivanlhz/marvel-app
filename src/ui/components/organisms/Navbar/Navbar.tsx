@@ -2,6 +2,7 @@ import React from 'react';
 import { Logo } from '@/ui/components/atoms/Logo';
 import { HeartButton } from '@/ui/components/molecules/HeartButton';
 import './Navbar.css';
+import { useNavigate } from 'react-router-dom';
 
 interface NavbarProps {
   favoriteCount?: number;
@@ -15,10 +16,17 @@ export const Navbar: React.FC<NavbarProps> = ({
   onFavoritesClick,
 }) => {
   const showHeartButton = onFavoritesClick !== undefined;
+  const navigate = useNavigate()
+
+  const handleLogoClick = () => {
+    onLogoClick && onLogoClick()
+    navigate('/')
+  }
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <Logo onClick={onLogoClick} />
+        <Logo onClick={handleLogoClick} />
         {showHeartButton && (
           <HeartButton
             active={true}

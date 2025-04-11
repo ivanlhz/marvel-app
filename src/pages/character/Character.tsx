@@ -29,24 +29,13 @@ const CharacterPage = () => {
   }, [characterId, error, navigate]);
 
   const isFavorite = favoriteCharacters.some(
-    favCharacter => favCharacter.id === characterId
+    favCharacter => String(favCharacter.id) === String(characterId)
   );
-  console.log(isFavorite)
 
   // Manejar el toggle de favoritos
   const handleFavoriteToggle = () => {
     if (character) {
-      addFavoriteCharacter({
-        id: character.id,
-        name: character.name,
-        ki: character.ki,
-        maxKi: character.maxKi,
-        race: character.race,
-        gender: character.gender,
-        description: character.description,
-        image: character.image,
-        affiliation: character.affiliation,
-      });
+      addFavoriteCharacter(character);
     }
   };
 
@@ -74,9 +63,7 @@ const CharacterPage = () => {
           <div className="comics-grid">
             {character.transformations.map(transformation => (
               <div key={transformation.id} className="comic-item">
-                <div className="comic-image">
-                  <img src={transformation.image} alt={transformation.name} />
-                </div>
+                <CharacterImage src={transformation.image} alt={transformation.name} className="comic-image" />
                 <div className="comic-info">
                   <h3 className="comic-title">{transformation.name}</h3>
                   <p className="comic-year">{transformation.ki}</p>

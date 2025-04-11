@@ -8,7 +8,7 @@ import { useCharacterManagement } from '@/ui/hooks/useCharacterManagement';
 
 interface HomePageProps {
   showAllCharacters: boolean;
-  handleShowAllCharacters: () => void;
+  handleShowAllCharacters?: () => void;
 }
 
 const HomePage = ({ showAllCharacters, handleShowAllCharacters }: HomePageProps) => {
@@ -39,7 +39,7 @@ const HomePage = ({ showAllCharacters, handleShowAllCharacters }: HomePageProps)
 
   const handleClearSearch = () => {
     clearSearchValue();
-    handleShowAllCharacters();
+    // handleShowAllCharacters();
   };
 
   return (
