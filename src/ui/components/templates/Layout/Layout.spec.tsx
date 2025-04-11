@@ -1,8 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Layout } from './Layout';
-import { ReactNode } from 'react';
 
-jest.mock('@/ui/components/molecules/Navbar', () => ({
+jest.mock('@/ui/components/organisms/Navbar', () => ({
   Navbar: ({
     favoriteCount,
     onLogoClick,

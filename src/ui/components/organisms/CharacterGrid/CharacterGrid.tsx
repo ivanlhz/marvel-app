@@ -1,7 +1,8 @@
 import React from 'react';
-import { CharacterCard } from '../../atoms/CharacterCard';
+import { CharacterCard } from '../../molecules/CharacterCard';
 import './CharacterGrid.css';
 import { Character } from '@/core/dbapi';
+import { useNavigate } from 'react-router-dom';
 
 interface CharacterGridProps {
   characters: Character[];
@@ -14,6 +15,12 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({
   onFavoriteToggle,
   favoriteIds,
 }) => {
+  const navigate = useNavigate();
+
+  const handleCharacterClick = (characterId: string) => {
+    navigate(`/character?id=${characterId}`);
+  };
+
   return (
     <div className="character-grid" data-testid="character-grid">
       {characters.map(character => (
@@ -23,6 +30,7 @@ export const CharacterGrid: React.FC<CharacterGridProps> = ({
             name={character.name}
             isFavorite={favoriteIds?.includes(character.id)}
             onFavoriteToggle={() => onFavoriteToggle(character.id)}
+            onImageClick={() => handleCharacterClick(character.id)}
           />
         </div>
       ))}

@@ -7,10 +7,10 @@
   position: relative;
   clip-path: polygon(
     0% 0%,
-    /* Esquina superior izquierda */ 100% 0%,
-    /* Esquina superior derecha */ 100% 93%,
-    /* Punto en el borde derecho */ 90% 100%,
-    /* Punto en el borde inferior */ 0% 100% /* Esquina inferior izquierda */
+    100% 0%,
+    100% 93%,
+    90% 100%,
+    0% 100%
   );
 }
 

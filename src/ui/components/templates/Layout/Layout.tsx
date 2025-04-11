@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar } from '@/ui/components/molecules/Navbar';
+import { Navbar } from '@/ui/components/organisms/Navbar';
 import './Layout.css';
 
 interface LayoutProps {

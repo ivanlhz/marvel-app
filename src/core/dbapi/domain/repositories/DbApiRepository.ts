@@ -7,6 +7,6 @@ import {
 
 export interface DbApiRepository {
   getCharacters: (page: number, limit: number) => Promise<Result<CharactersWithPagination>>;
-  getCharacterById: (id: number) => Promise<Result<CharacterWithTransformationsAndPlanet>>;
+  getCharacterById: (id: string) => Promise<Result<CharacterWithTransformationsAndPlanet>>;
   filterCharacters: (name: string) => Promise<Result<Character[]>>;
 }

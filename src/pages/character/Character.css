@@ -1,0 +1,139 @@
+.character-page {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-background-white);
+}
+
+.container {
+  position: relative;
+  width: 1512px;
+  margin: 0 auto;
+  display: flex;
+}
+.hero-section {
+  overflow: hidden;
+  background-color: var(--color-background-dark);
+  color: var(--color-text-primary);
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    100% 94%,
+    99% 100%,
+    0% 100%
+  );
+}
+.detail-hero{
+  width: 30%;
+}
+
+.character-info {
+  padding: var(--spacing-xl);
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  text-align: start;
+}
+
+.favorite-button-container {
+  position: absolute;
+  top: var(--spacing-xl);
+  right: var(--spacing-xl);
+  z-index: 10;
+}
+
+.comics-section {
+  padding: var(--spacing-xl);
+  width: 100%;
+  background-color: var(--color-background-white);
+}
+.comics-section .container{
+  flex-direction: column;
+  text-align: start;
+}
+
+.comics-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-text-dark);
+}
+
+.comics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--spacing-xl);
+  overflow-x: scroll;
+  padding: var(--spacing-md) 0;
+}
+
+.comic-item {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-background-card);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  transition: var(--transition-normal);
+}
+
+.comic-item:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--box-shadow);
+}
+
+.comic-image {
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+}
+
+.comic-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.comic-info {
+  padding: var(--spacing-md);
+}
+
+.comic-title {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: var(--spacing-xs);
+}
+
+.comic-year {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .comics-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--spacing-lg);
+  }
+
+  .comic-image {
+    height: 220px;
+  }
+}
+
+@media (max-width: 480px) {
+  .character-info,
+  .comics-section {
+    padding: var(--spacing-lg);
+  }
+
+  .comics-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: var(--spacing-md);
+  }
+
+  .comic-image {
+    height: 180px;
+  }
+}

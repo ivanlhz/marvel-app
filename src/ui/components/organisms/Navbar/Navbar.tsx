@@ -1,6 +1,6 @@
 import React from 'react';
 import { Logo } from '@/ui/components/atoms/Logo';
-import { HeartButton } from '@/ui/components/atoms/HeartButton';
+import { HeartButton } from '@/ui/components/molecules/HeartButton';
 import './Navbar.css';
 
 interface NavbarProps {

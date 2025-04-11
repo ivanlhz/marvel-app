@@ -14,7 +14,7 @@ export const useCharacters = (page: number = 1, limit: number = 50) => {
   });
 };
 
-export const useCharacterById = (id: number) => {
+export const useCharacterById = (id: string) => {
   return useQuery({
     queryKey: ['character', id],
     queryFn: async () => {

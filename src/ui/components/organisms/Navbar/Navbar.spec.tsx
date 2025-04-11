@@ -9,7 +9,7 @@ jest.mock('../../atoms/Logo', () => ({
   ),
 }));
 
-jest.mock('../../atoms/HeartButton', () => ({
+jest.mock('../../molecules/HeartButton', () => ({
   HeartButton: ({
     active,
     count,

@@ -1,5 +1,4 @@
 import React from 'react';
-import './CharacterDescription.css';
 
 interface CharacterDescriptionProps {
   description: string;

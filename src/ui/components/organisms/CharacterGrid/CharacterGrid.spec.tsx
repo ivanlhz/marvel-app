@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { CharacterGrid } from './CharacterGrid';
 import { Character } from '@/core/dbapi';
 
-jest.mock('../../atoms/CharacterCard', () => ({
+jest.mock('../../molecules/CharacterCard', () => ({
   CharacterCard: ({
     imageUrl,
     name,
