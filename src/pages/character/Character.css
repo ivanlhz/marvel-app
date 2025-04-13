@@ -15,15 +15,9 @@
   overflow: hidden;
   background-color: var(--color-background-dark);
   color: var(--color-text-primary);
-  clip-path: polygon(
-    0% 0%,
-    100% 0%,
-    100% 94%,
-    99% 100%,
-    0% 100%
-  );
+  clip-path: polygon(0% 0%, 100% 0%, 100% 94%, 99% 100%, 0% 100%);
 }
-.character-page .detail-hero{
+.character-page .detail-hero {
   width: 30%;
 }
 
@@ -50,7 +44,7 @@
   background-color: var(--color-background-white);
 }
 
-.character-page .comics-section .container{
+.character-page .comics-section .container {
   flex-direction: column;
   text-align: start;
 }
@@ -98,7 +92,6 @@
   object-position: top;
 }
 
-
 .character-page .comic-info {
   padding: var(--spacing-md);
 }
@@ -116,7 +109,7 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .character-page  .comics-grid {
+  .character-page .comics-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: var(--spacing-lg);
   }

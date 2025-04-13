@@ -8,7 +8,7 @@ jest.mock('../../molecules/CharacterCard', () => ({
     name,
     isFavorite,
     onFavoriteToggle,
-    onImageClick
+    onImageClick,
   }: {
     imageUrl: string;
     name: string;
@@ -29,14 +29,14 @@ jest.mock('../../molecules/CharacterCard', () => ({
 // Mock de useNavigate para React Router
 const mockedUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
-    ...(jest.requireActual('react-router-dom')),
-    useNavigate: () => mockedUsedNavigate,
-}))
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockedUsedNavigate,
+}));
 
 describe('CharacterGrid', () => {
   beforeEach(() => {
-    mockedUsedNavigate.mockClear()
-  })
+    mockedUsedNavigate.mockClear();
+  });
   const mockCharacters: Character[] = [
     {
       id: '1',
@@ -109,8 +109,8 @@ describe('CharacterGrid', () => {
     const handleFavoriteToggle = jest.fn();
 
     render(<CharacterGrid characters={mockCharacters} onFavoriteToggle={handleFavoriteToggle} />);
-    const charImage = screen.getByAltText('Iron Man')
-    fireEvent.click(charImage)
-    expect(mockedUsedNavigate).toHaveBeenCalledTimes(1)
-  })
+    const charImage = screen.getByAltText('Iron Man');
+    fireEvent.click(charImage);
+    expect(mockedUsedNavigate).toHaveBeenCalledTimes(1);
+  });
 });

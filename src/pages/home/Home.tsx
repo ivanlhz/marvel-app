@@ -8,10 +8,9 @@ import { useCharacterManagement } from '@/ui/hooks/useCharacterManagement';
 
 interface HomePageProps {
   showAllCharacters: boolean;
-  handleShowAllCharacters?: () => void;
 }
 
-const HomePage = ({ showAllCharacters, handleShowAllCharacters }: HomePageProps) => {
+const HomePage = ({ showAllCharacters }: HomePageProps) => {
   const { addFavoriteCharacter, favoriteCharacters } = useFavoriteContext();
   const { currentPage, goNextPage, goBackPage } = usePagination();
 
@@ -39,7 +38,6 @@ const HomePage = ({ showAllCharacters, handleShowAllCharacters }: HomePageProps)
 
   const handleClearSearch = () => {
     clearSearchValue();
-    // handleShowAllCharacters();
   };
 
   return (

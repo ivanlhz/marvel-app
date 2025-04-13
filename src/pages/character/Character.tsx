@@ -17,7 +17,7 @@ const CharacterPage = () => {
   const characterId = searchParams.get('id');
 
   if (!characterId) {
-    return null
+    return null;
   }
 
   const { data: character, error } = useCharacterById(characterId);
@@ -39,8 +39,8 @@ const CharacterPage = () => {
     }
   };
 
-  if(!character) {
-    return null
+  if (!character) {
+    return null;
   }
 
   return (
@@ -59,18 +59,26 @@ const CharacterPage = () => {
       </div>
       <div className="comics-section">
         <div className="container">
-          <h2 className="comics-title">Transformaciones</h2>
-          <div className="comics-grid">
-            {character.transformations.map(transformation => (
-              <div key={transformation.id} className="comic-item">
-                <CharacterImage src={transformation.image} alt={transformation.name} className="comic-image" />
-                <div className="comic-info">
-                  <h3 className="comic-title">{transformation.name}</h3>
-                  <p className="comic-year">{transformation.ki}</p>
-                </div>
+          {character.transformations.length ? (
+            <>
+              <h2 className="comics-title">Transformaciones</h2>
+              <div className="comics-grid">
+                {character.transformations.map(transformation => (
+                  <div key={transformation.id} className="comic-item">
+                    <CharacterImage
+                      src={transformation.image}
+                      alt={transformation.name}
+                      className="comic-image"
+                    />
+                    <div className="comic-info">
+                      <h3 className="comic-title">{transformation.name}</h3>
+                      <p className="comic-year">{transformation.ki}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          ): <h2 className='comics-title'>Actualmente no tiene transformaciones.</h2>}
         </div>
       </div>
     </div>

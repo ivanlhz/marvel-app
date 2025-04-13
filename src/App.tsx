@@ -27,15 +27,7 @@ function AppContent() {
     >
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <HomePage
-                showAllCharacters={showAllCharacters}
-                handleShowAllCharacters={handleShowAllCharacters}
-              />
-            }
-          />
+          <Route path="/" element={<HomePage showAllCharacters={showAllCharacters} />} />
           <Route path="/character" element={<CharacterPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

@@ -161,7 +161,7 @@ describe('useCharacters', () => {
       value: mockCharacterData,
     });
 
-    const { result } = renderHook(() => useCharacterById("1"), {
+    const { result } = renderHook(() => useCharacterById('1'), {
       wrapper: createWrapper(),
     });
 
@@ -169,26 +169,26 @@ describe('useCharacters', () => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    expect(dbApiRepository.getCharacterById).toHaveBeenCalledWith("1");
+    expect(dbApiRepository.getCharacterById).toHaveBeenCalledWith('1');
     expect(result.current.data).toEqual(mockCharacterData);
   });
 
   it('should throw error fetching character by id', async () => {
-    const errorMessage = "Failed to fetch character";
+    const errorMessage = 'Failed to fetch character';
     (dbApiRepository.getCharacterById as jest.Mock).mockResolvedValue({
       isError: true,
-      error: errorMessage
+      error: errorMessage,
     });
-  
-    const { result } = renderHook(() => useCharacterById("1"), {
+
+    const { result } = renderHook(() => useCharacterById('1'), {
       wrapper: createWrapper(),
     });
-  
+
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
-  
-    expect(dbApiRepository.getCharacterById).toHaveBeenCalledWith("1");
+
+    expect(dbApiRepository.getCharacterById).toHaveBeenCalledWith('1');
     expect(result.current.error).toBeTruthy();
     expect(result.current.error?.message).toBe(errorMessage);
   });

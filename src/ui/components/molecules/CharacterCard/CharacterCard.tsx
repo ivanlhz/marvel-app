@@ -29,7 +29,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
           onClick={onFavoriteToggle}
           aria-label={isFavorite ? 'Quitar de favoritos' : 'Añadir a favoritos'}
         >
-         <Heart isActive={isFavorite} /> 
+          <Heart isActive={isFavorite} />
         </button>
       </div>
     </div>

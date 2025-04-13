@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { FavoriteProvider } from '@/ui/context/favoriteContext';
 import HomePage from './Home';
@@ -11,7 +11,6 @@ jest.mock('@/ui/hooks/useCharacterManagement', () => ({
   useCharacterManagement: (currentPage: number, showAllCharacters: boolean) => {
     const [searchVal, setSearchVal] = useState('');
 
-    // Determinamos los personajes filtrados según los criterios
     const getFilteredCharacters = () => {
       // Primero filtramos por favoritos si es necesario
       let characters = showAllCharacters

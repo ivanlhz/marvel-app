@@ -16,12 +16,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   onFavoritesClick,
 }) => {
   const showHeartButton = onFavoritesClick !== undefined;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleLogoClick = () => {
-    onLogoClick && onLogoClick()
-    navigate('/')
-  }
+    if (!!onLogoClick) {
+      onLogoClick();
+    }
+    navigate('/');
+  };
 
   return (
     <nav className="navbar">
