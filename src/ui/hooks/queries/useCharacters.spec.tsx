@@ -104,7 +104,27 @@ describe('useCharacters', () => {
       value: mockCharactersData,
     });
 
-    const { result } = renderHook(() => useCharacters(1, 50), {
+    const { result } = renderHook(() => useCharacters(2, 20), {
+      wrapper: createWrapper(),
+    });
+
+    expect(result.current.isLoading).toBe(true);
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    expect(dbApiRepository.getCharacters).toHaveBeenCalledWith(2, 20);
+    expect(result.current.data).toEqual(mockCharactersData);
+  });
+
+  it('should fetch characters successfully unsing default values', async () => {
+    (dbApiRepository.getCharacters as jest.Mock).mockResolvedValue({
+      isError: false,
+      value: mockCharactersData,
+    });
+
+    const { result } = renderHook(() => useCharacters(), {
       wrapper: createWrapper(),
     });
 
@@ -141,8 +161,7 @@ describe('useCharacters', () => {
       value: mockCharacterData,
     });
 
-    // Pasamos 1 como ID numérico aunque en el modelo es string
-    const { result } = renderHook(() => useCharacterById(1), {
+    const { result } = renderHook(() => useCharacterById("1"), {
       wrapper: createWrapper(),
     });
 
@@ -150,17 +169,28 @@ describe('useCharacters', () => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    expect(dbApiRepository.getCharacterById).toHaveBeenCalledWith(1);
+    expect(dbApiRepository.getCharacterById).toHaveBeenCalledWith("1");
     expect(result.current.data).toEqual(mockCharacterData);
   });
 
-  it('should not fetch character when id is not provided', async () => {
-    const { result } = renderHook(() => useCharacterById(0), {
+  it('should throw error fetching character by id', async () => {
+    const errorMessage = "Failed to fetch character";
+    (dbApiRepository.getCharacterById as jest.Mock).mockResolvedValue({
+      isError: true,
+      error: errorMessage
+    });
+  
+    const { result } = renderHook(() => useCharacterById("1"), {
       wrapper: createWrapper(),
     });
-
-    expect(result.current.isLoading).toBe(false);
-    expect(dbApiRepository.getCharacterById).not.toHaveBeenCalled();
+  
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+  
+    expect(dbApiRepository.getCharacterById).toHaveBeenCalledWith("1");
+    expect(result.current.error).toBeTruthy();
+    expect(result.current.error?.message).toBe(errorMessage);
   });
 
   it('should filter characters by name successfully', async () => {

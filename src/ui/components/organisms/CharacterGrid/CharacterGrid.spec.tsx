@@ -8,14 +8,16 @@ jest.mock('../../molecules/CharacterCard', () => ({
     name,
     isFavorite,
     onFavoriteToggle,
+    onImageClick
   }: {
     imageUrl: string;
     name: string;
     isFavorite?: boolean;
     onFavoriteToggle?: () => void;
+    onImageClick?: () => void;
   }) => (
     <div data-testid={`character-card-${name}`}>
-      <img src={imageUrl} alt={name} />
+      <img src={imageUrl} alt={name} onClick={onImageClick} />
       <span>{name}</span>
       <button data-testid={`favorite-button-${name}`} onClick={onFavoriteToggle}>
         {isFavorite ? 'Quitar de favoritos' : 'Añadir a favoritos'}
@@ -24,7 +26,17 @@ jest.mock('../../molecules/CharacterCard', () => ({
   ),
 }));
 
+// Mock de useNavigate para React Router
+const mockedUsedNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+    ...(jest.requireActual('react-router-dom')),
+    useNavigate: () => mockedUsedNavigate,
+}))
+
 describe('CharacterGrid', () => {
+  beforeEach(() => {
+    mockedUsedNavigate.mockClear()
+  })
   const mockCharacters: Character[] = [
     {
       id: '1',
@@ -92,4 +104,13 @@ describe('CharacterGrid', () => {
     expect(handleFavoriteToggle).toHaveBeenCalledTimes(1);
     expect(handleFavoriteToggle).toHaveBeenCalledWith('2');
   });
+
+  test('calls mockedUsedNavigate with correct character id when image link is clicked', () => {
+    const handleFavoriteToggle = jest.fn();
+
+    render(<CharacterGrid characters={mockCharacters} onFavoriteToggle={handleFavoriteToggle} />);
+    const charImage = screen.getByAltText('Iron Man')
+    fireEvent.click(charImage)
+    expect(mockedUsedNavigate).toHaveBeenCalledTimes(1)
+  })
 });
