@@ -1,33 +1,25 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { Suspense, useState, useCallback } from 'react';
+import { Suspense } from 'react';
 import { FavoriteProvider, useFavoriteContext } from './ui/context/favoriteContext';
 import { Layout } from './ui/components/templates/Layout';
 import { CharacterPage, HomePage, NotFoundPage } from './routes';
+import { SearchValueProvider } from './ui/context/searchValueContext';
 
 function AppContent() {
-  const { favoriteCount } = useFavoriteContext();
-  const [showAllCharacters, setShowAllCharacters] = useState(true);
+  const { favoriteCount, showFavorites, hideFavorites, isFavoritesShowed } = useFavoriteContext();
   const location = useLocation();
   const isNotFoundPage = !['/', '/character'].includes(location.pathname);
-
-  const handleShowAllCharacters = useCallback(() => {
-    setShowAllCharacters(true);
-  }, []);
-
-  const handleHideAllCharacters = useCallback(() => {
-    setShowAllCharacters(false);
-  }, []);
 
   return (
     <Layout
       favoriteCount={isNotFoundPage ? undefined : favoriteCount}
-      onLogoClick={handleShowAllCharacters}
-      onFavoritesClick={isNotFoundPage ? undefined : handleHideAllCharacters}
+      onLogoClick={hideFavorites}
+      onFavoritesClick={isNotFoundPage ? undefined : showFavorites}
     >
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
-          <Route path="/" element={<HomePage showAllCharacters={showAllCharacters} />} />
+          <Route path="/" element={<SearchValueProvider><HomePage showFavoritesCharacters={isFavoritesShowed} /></SearchValueProvider>} />
           <Route path="/character" element={<CharacterPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

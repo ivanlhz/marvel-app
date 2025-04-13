@@ -5,29 +5,28 @@ import { useFavoriteContext } from '@/ui/context/favoriteContext';
 import { SearchBar } from '@/ui/components/molecules/SearchBar';
 import { usePagination } from '@/ui/hooks/pagination/usePagination';
 import { useCharacterManagement } from '@/ui/hooks/useCharacterManagement';
+import { useSearchValue } from '@/ui/context/searchValueContext';
 
 interface HomePageProps {
-  showAllCharacters: boolean;
+  showFavoritesCharacters: boolean;
 }
 
-const HomePage = ({ showAllCharacters }: HomePageProps) => {
+const HomePage = ({ showFavoritesCharacters }: HomePageProps) => {
   const { addFavoriteCharacter, favoriteCharacters } = useFavoriteContext();
   const { currentPage, goNextPage, goBackPage } = usePagination();
 
-  const {
-    filteredCharacters,
-    searchValue,
-    clearSearchValue,
-    handleSearchChange,
-    charactersQuery,
-    resultCount,
-  } = useCharacterManagement(currentPage, showAllCharacters, favoriteCharacters);
+  const { filteredCharacters, charactersQuery, resultCount } = useCharacterManagement(
+    currentPage,
+    showFavoritesCharacters,
+    favoriteCharacters
+  );
+  const { clearSearchValue, searchValue } = useSearchValue();
 
   useEffect(() => {
-    if (!showAllCharacters) {
+    if (showFavoritesCharacters) {
       clearSearchValue();
     }
-  }, [showAllCharacters, clearSearchValue]);
+  }, [showFavoritesCharacters]);
 
   const handleFavoriteToggle = (id: string) => {
     const character = filteredCharacters.find(character => character.id === id);
@@ -36,18 +35,9 @@ const HomePage = ({ showAllCharacters }: HomePageProps) => {
     }
   };
 
-  const handleClearSearch = () => {
-    clearSearchValue();
-  };
-
   return (
     <div className="home-container">
-      <SearchBar
-        searchValue={searchValue}
-        resultCount={resultCount}
-        onSearchChange={handleSearchChange}
-        onClearClick={handleClearSearch}
-      />
+      <SearchBar resultCount={resultCount} />
       <main className="main-content">
         <CharacterGrid
           characters={filteredCharacters}

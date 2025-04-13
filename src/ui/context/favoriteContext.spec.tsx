@@ -1,10 +1,36 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { FavoriteProvider, useFavoriteContext } from './favoriteContext';
+import { Character } from '@/core/dbapi';
 
 const TestComponent = () => {
   const { favoriteCount } = useFavoriteContext();
   return <div>Favorite Count: {favoriteCount}</div>;
 };
+
+ const mockCharacters: Character[] = [
+    {
+      id: '3',
+      name: 'Captain America',
+      ki: '3000',
+      maxKi: '6000',
+      race: 'Human',
+      gender: 'Male',
+      description: 'Super soldier',
+      image: 'captain-america.jpg',
+      affiliation: 'Avengers',
+    },
+    {
+      id: '4',
+      name: 'Thor',
+      ki: '9000',
+      maxKi: '15000',
+      race: 'Asgardian',
+      gender: 'Male',
+      description: 'God of Thunder',
+      image: 'thor.jpg',
+      affiliation: 'Avengers',
+    },
+  ];
 
 const TestComponentWithActions = () => {
   const { favoriteCount, addFavoriteCharacter, favoriteCharacters, setAllFavoriteCharacters } =
@@ -14,10 +40,10 @@ const TestComponentWithActions = () => {
       <p>Favorite Count: {favoriteCount}</p>
       <p>
         Favorite Characters:{' '}
-        {favoriteCharacters.length ? favoriteCharacters.join(',') : 'Empty list'}
+        {favoriteCharacters.length ? favoriteCharacters.map( character => character.id).join(',') : 'Empty list'}
       </p>
-      <button onClick={() => addFavoriteCharacter('1aaa')}>Add</button>
-      <button onClick={() => setAllFavoriteCharacters(['1aaa', '2aaa', '3aaa'])}>Add All</button>
+      <button onClick={() => addFavoriteCharacter(mockCharacters[0])}>Add</button>
+      <button onClick={() => setAllFavoriteCharacters(mockCharacters)}>Add All</button>
     </div>
   );
 };
@@ -57,13 +83,13 @@ describe('FavoriteContext', () => {
     expect(screen.getByText('Favorite Characters: Empty list')).toBeInTheDocument();
     // After click the favoriteCharacter list first element must be the id "1aaa"
     fireEvent.click(clikableButton);
-    expect(screen.getByText('Favorite Characters: 1aaa')).toBeInTheDocument();
+    expect(screen.getByText('Favorite Characters: 3')).toBeInTheDocument();
     // If click again the current element in the favoriteCharacter list must be deleted
     fireEvent.click(clikableButton);
     expect(screen.getByText('Favorite Characters: Empty list')).toBeInTheDocument();
     // Add all ids to the list
     const clikableAddAllButton = screen.getByText('Add All');
     fireEvent.click(clikableAddAllButton);
-    expect(screen.getByText('Favorite Characters: 1aaa,2aaa,3aaa')).toBeInTheDocument();
+    expect(screen.getByText('Favorite Characters: 3,4')).toBeInTheDocument();
   });
 });

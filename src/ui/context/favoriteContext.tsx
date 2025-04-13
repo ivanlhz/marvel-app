@@ -6,11 +6,15 @@ export interface FavoriteContextProps {
   favoriteCharacters: Character[];
   addFavoriteCharacter: (character: Character) => void;
   setAllFavoriteCharacters: (character: Character[]) => void;
+  hideFavorites: () => void;
+  showFavorites: () => void;
+  isFavoritesShowed: boolean;
 }
 
 export const FavoriteContext = createContext<FavoriteContextProps | null>(null);
 
 export const FavoriteProvider = ({ children }: { children: React.ReactNode }) => {
+  const [showFavoritesCharacters, setShowFavoritesCharacters] = useState(false);
   const [favoriteCharacters, setFavoriteCharacters] = useState<Character[]>([]);
   const favoriteCount = favoriteCharacters.length;
 
@@ -26,12 +30,27 @@ export const FavoriteProvider = ({ children }: { children: React.ReactNode }) =>
     setFavoriteCharacters(characters);
   };
 
+  const showFavorites = () => {
+    setShowFavoritesCharacters(true);
+  };
+  const hideFavorites = () => {
+    setShowFavoritesCharacters(false);
+  };
+
   return (
-    <FavoriteContext.Provider
-      value={{ favoriteCount, favoriteCharacters, addFavoriteCharacter, setAllFavoriteCharacters }}
+    <FavoriteContext
+      value={{
+        favoriteCount,
+        favoriteCharacters,
+        addFavoriteCharacter,
+        setAllFavoriteCharacters,
+        hideFavorites,
+        showFavorites,
+        isFavoritesShowed: showFavoritesCharacters,
+      }}
     >
       {children}
-    </FavoriteContext.Provider>
+    </FavoriteContext>
   );
 };
 

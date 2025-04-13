@@ -78,7 +78,9 @@ const CharacterPage = () => {
                 ))}
               </div>
             </>
-          ): <h2 className='comics-title'>Actualmente no tiene transformaciones.</h2>}
+          ) : (
+            <h2 className="comics-title">Actualmente no tiene transformaciones.</h2>
+          )}
         </div>
       </div>
     </div>

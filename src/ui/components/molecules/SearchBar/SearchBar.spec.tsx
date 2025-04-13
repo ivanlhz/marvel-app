@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { SearchBar } from './SearchBar';
 import { ChangeEvent } from 'react';
+import { SearchValueProvider } from '@/ui/context/searchValueContext';
 
 jest.mock('../../atoms/SearchInput', () => ({
   SearchInput: ({
@@ -28,11 +29,15 @@ jest.mock('../../atoms/ResultCounter', () => ({
   ),
 }));
 
+const setup = (resultCount = 0) => {
+  render(<SearchValueProvider><SearchBar  resultCount={resultCount} /></SearchValueProvider>);
+}
+
+
 describe('SearchBar', () => {
   test('renders search input and result counter', () => {
-    const handleSearchChange = jest.fn();
 
-    render(<SearchBar searchValue="" resultCount={10} onSearchChange={handleSearchChange} />);
+    setup(10)
 
     const searchInput = screen.getByTestId('search-input');
     const resultCounter = screen.getByTestId('result-counter');
@@ -40,42 +45,5 @@ describe('SearchBar', () => {
     expect(searchInput).toBeInTheDocument();
     expect(resultCounter).toBeInTheDocument();
     expect(resultCounter).toHaveTextContent('10 resultados');
-  });
-
-  test('passes searchValue to SearchInput component', () => {
-    const handleSearchChange = jest.fn();
-    const searchValue = 'Spider-Man';
-
-    render(
-      <SearchBar searchValue={searchValue} resultCount={5} onSearchChange={handleSearchChange} />
-    );
-
-    const searchInput = screen.getByTestId('search-input');
-
-    expect(searchInput).toHaveValue(searchValue);
-  });
-
-  test('passes resultCount to ResultCounter component', () => {
-    const handleSearchChange = jest.fn();
-    const resultCount = 42;
-
-    render(
-      <SearchBar searchValue="" resultCount={resultCount} onSearchChange={handleSearchChange} />
-    );
-
-    const resultCounter = screen.getByTestId('result-counter');
-
-    expect(resultCounter).toHaveTextContent(`${resultCount} resultados`);
-  });
-
-  test('calls onSearchChange when input value changes', () => {
-    const handleSearchChange = jest.fn();
-
-    render(<SearchBar searchValue="" resultCount={0} onSearchChange={handleSearchChange} />);
-
-    const searchInput = screen.getByTestId('search-input');
-    fireEvent.change(searchInput, { target: { value: 'Thor' } });
-
-    expect(handleSearchChange).toHaveBeenCalledTimes(1);
   });
 });

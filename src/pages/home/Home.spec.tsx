@@ -5,6 +5,7 @@ import HomePage from './Home';
 import { Character, mockCharacters } from '@/mocks/characters';
 import { ChangeEvent } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { SearchValueProvider } from '@/ui/context/searchValueContext';
 
 // Mock del hook useCharacterManagement
 jest.mock('@/ui/hooks/useCharacterManagement', () => ({
@@ -139,13 +140,15 @@ const createTestQueryClient = () =>
     },
   });
 
-const renderHomePage = (props = { showAllCharacters: true, handleShowAllCharacters: () => {} }) => {
+const renderHomePage = (props = { showFavoritesCharacters: false, handleShowAllCharacters: () => {} }) => {
   const testQueryClient = createTestQueryClient();
   return render(
     <QueryClientProvider client={testQueryClient}>
+      <SearchValueProvider>
       <FavoriteProvider>
         <HomePage {...props} />
       </FavoriteProvider>
+      </SearchValueProvider>
     </QueryClientProvider>
   );
 };
@@ -167,7 +170,7 @@ describe('HomePage', () => {
   });
 
   test('shows only favorite characters when showAllCharacters is false', () => {
-    renderHomePage({ showAllCharacters: false, handleShowAllCharacters: () => {} });
+    renderHomePage({ showFavoritesCharacters: true, handleShowAllCharacters: () => {} });
 
     const favoritesCount = mockCharacters.filter(char => char.isFavorite).length;
 

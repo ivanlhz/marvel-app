@@ -3,6 +3,5 @@
   font-weight: bold;
   color: var(--color-text-primary);
   margin: 0;
-  padding: var(--spacing-md) 0;
   text-transform: uppercase;
 }
