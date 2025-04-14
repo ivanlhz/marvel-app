@@ -4,10 +4,6 @@ import { useCharacters, useFilterCharacters } from '@/ui/hooks/queries/useCharac
 import { useFavoriteContext } from '@/ui/context/favoriteContext';
 import { useSearchValue } from '../context/searchValueContext';
 
-/**
- * Hook para gestionar los personajes, búsquedas y filtros en la página Home
- * Sigue el principio de responsabilidad única al separar esta lógica del componente
- */
 export const useCharacterManagement = (
   currentPage: number,
   showFavoritesCharacters: boolean,
@@ -17,7 +13,6 @@ export const useCharacterManagement = (
   const { searchValue } = useSearchValue();
   const { favoriteCount } = useFavoriteContext();
 
-  // Consultas para obtener datos
   const { data: charactersQuery } = useCharacters(currentPage, 50);
   const { data: searchQuery } = useFilterCharacters(searchValue);
 
@@ -28,22 +23,18 @@ export const useCharacterManagement = (
     }
   }, [charactersQuery, searchValue, showFavoritesCharacters]);
 
-  // Efecto para actualizar resultados de búsqueda
   useEffect(() => {
-    console.log('searchQuery', searchQuery);
     if (searchQuery?.length) {
       setFilteredCharacters(searchQuery);
     }
   }, [searchQuery]);
 
-  // Efecto para mostrar favoritos cuando se cambia a ese modo
   useEffect(() => {
     if (showFavoritesCharacters) {
       setFilteredCharacters(favoriteCharacters);
     }
   }, [showFavoritesCharacters, favoriteCharacters]);
 
-  // Calcular el número de resultados según el modo y la búsqueda
   const getResultCount = (): number => {
     if (showFavoritesCharacters) {
       return favoriteCount;
