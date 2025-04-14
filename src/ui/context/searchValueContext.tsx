@@ -21,9 +21,9 @@ export const SearchValueProvider = ({ children }: { children: React.ReactNode })
   };
 
   return (
-    <SearchValueContext value={{ searchValue, clearSearchValue, handleSearchChange }}>
+    <SearchValueContext.Provider value={{ searchValue, clearSearchValue, handleSearchChange }}>
       {children}
-    </SearchValueContext>
+    </SearchValueContext.Provider>
   );
 };
 

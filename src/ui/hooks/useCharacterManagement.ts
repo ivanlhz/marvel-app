@@ -30,7 +30,7 @@ export const useCharacterManagement = (
 
   // Efecto para actualizar resultados de búsqueda
   useEffect(() => {
-    console.log('searchQuery', searchQuery)
+    console.log('searchQuery', searchQuery);
     if (searchQuery?.length) {
       setFilteredCharacters(searchQuery);
     }

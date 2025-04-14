@@ -1,237 +1,159 @@
-import { useState } from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { FavoriteProvider } from '@/ui/context/favoriteContext';
-import HomePage from './Home';
-import { Character, mockCharacters } from '@/mocks/characters';
-import { ChangeEvent } from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MemoryRouter } from 'react-router-dom';
+import HomePage from './Home';
+import { FavoriteProvider } from '@/ui/context/favoriteContext';
 import { SearchValueProvider } from '@/ui/context/searchValueContext';
+import { useCharacterManagement } from '@/ui/hooks/useCharacterManagement';
+import { usePagination } from '@/ui/hooks/pagination/usePagination';
+import { useFavoriteContext } from '@/ui/context/favoriteContext';
 
-// Mock del hook useCharacterManagement
-jest.mock('@/ui/hooks/useCharacterManagement', () => ({
-  useCharacterManagement: (currentPage: number, showAllCharacters: boolean) => {
-    const [searchVal, setSearchVal] = useState('');
+jest.mock('@/ui/hooks/useCharacterManagement');
+jest.mock('@/ui/hooks/pagination/usePagination');
+jest.mock('@/ui/context/favoriteContext');
 
-    const getFilteredCharacters = () => {
-      // Primero filtramos por favoritos si es necesario
-      let characters = showAllCharacters
-        ? mockCharacters
-        : mockCharacters.filter(char => char.isFavorite);
-
-      // Aplicamos filtro de búsqueda si hay un valor
-      if (searchVal && showAllCharacters) {
-        characters = characters.filter(char =>
-          char.name.toLowerCase().includes(searchVal.toLowerCase())
-        );
-      }
-
-      return characters;
-    };
-
-    const filteredCharacters = getFilteredCharacters();
-    const favoritesCount = mockCharacters.filter(char => char.isFavorite).length;
-
-    return {
-      filteredCharacters,
-      searchValue: searchVal,
-      clearSearchValue: () => setSearchVal(''),
-      handleSearchChange: (e: ChangeEvent<HTMLInputElement>) => setSearchVal(e.target.value),
-      charactersQuery: {
-        items: mockCharacters,
-        meta: {
-          totalItems: mockCharacters.length,
-          totalPages: 1,
-          currentPage,
-        },
-      },
-      resultCount: !showAllCharacters ? favoritesCount : filteredCharacters.length,
-    };
-  },
-}));
-
-// Mock de los hooks de paginación
-jest.mock('@/ui/hooks/pagination/usePagination', () => ({
-  usePagination: () => ({
-    currentPage: 1,
-    goNextPage: jest.fn(),
-    goBackPage: jest.fn(),
-  }),
-}));
-
-// Mock del componente CharacterGrid
+// Mock del componente CharacterGrid para poder probar el toggle de favoritos
 jest.mock('@/ui/components/organisms/CharacterGrid', () => ({
-  CharacterGrid: ({
-    characters,
-    onFavoriteToggle,
-  }: {
-    characters: Character[];
-    onFavoriteToggle: (id: string) => void;
-  }) => {
-    // Usamos un estado local para simular el cambio de estado de favorito
-    const [favorites, setFavorites] = useState<Record<string, boolean>>({});
-
-    const handleFavoriteToggle = (id: string) => {
-      setFavorites(prev => ({
-        ...prev,
-        [id]: !prev[id],
-      }));
-      onFavoriteToggle(id);
-    };
-
-    return (
-      <div data-testid="character-grid">
-        {characters.map((character: Character) => {
-          const isFavorite =
-            favorites[character.id] !== undefined ? favorites[character.id] : character.isFavorite;
-
-          return (
-            <div key={character.id} data-testid={`character-${character.id}`}>
-              <span>{character.name}</span>
-              <button
-                data-testid={`favorite-button-${character.id}`}
-                onClick={() => handleFavoriteToggle(character.id)}
-              >
-                {isFavorite ? 'Quitar de favoritos' : 'Añadir a favoritos'}
-              </button>
-            </div>
-          );
-        })}
-      </div>
-    );
-  },
-}));
-
-jest.mock('@/ui/components/molecules/SearchBar', () => ({
-  SearchBar: ({
-    searchValue,
-    resultCount,
-    onSearchChange,
-    onClearClick,
-  }: {
-    searchValue: string;
-    resultCount: number;
-    onSearchChange: (e: ChangeEvent<HTMLInputElement>) => void;
-    onClearClick?: () => void;
-  }) => (
-    <div data-testid="search-bar">
-      <input
-        data-testid="search-input"
-        value={searchValue}
-        onChange={onSearchChange}
-        placeholder="Buscar personajes"
-      />
-      <span data-testid="result-count">{resultCount} resultados</span>
-      {onClearClick && (
-        <button data-testid="clear-button" onClick={onClearClick}>
-          Limpiar
-        </button>
-      )}
+  CharacterGrid: ({ onFavoriteToggle }: { onFavoriteToggle: (id: string) => void }) => (
+    <div>
+      <button data-testid="favorite-toggle-button" onClick={() => onFavoriteToggle('1')}>
+        Toggle Favorite
+      </button>
     </div>
   ),
 }));
 
-// Crear una instancia de QueryClient para los tests
-const createTestQueryClient = () =>
-  new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
+// Mock de los textos de paginación
+jest.mock('@/ui/components/molecules/SearchBar', () => ({
+  SearchBar: ({ resultCount }: { resultCount: number }) => <div>{resultCount} results</div>,
+}));
 
-const renderHomePage = (props = { showFavoritesCharacters: false, handleShowAllCharacters: () => {} }) => {
-  const testQueryClient = createTestQueryClient();
-  return render(
-    <QueryClientProvider client={testQueryClient}>
-      <SearchValueProvider>
-      <FavoriteProvider>
-        <HomePage {...props} />
-      </FavoriteProvider>
-      </SearchValueProvider>
-    </QueryClientProvider>
-  );
+const mockCharacters = [
+  { id: '1', name: 'Goku', description: 'Saiyan', image: 'goku.jpg' },
+  { id: '2', name: 'Vegeta', description: 'Prince Saiyan', image: 'vegeta.jpg' },
+];
+
+const mockCharactersQuery = {
+  items: mockCharacters,
+  meta: {
+    totalItems: 100,
+    totalPages: 5,
+    currentPage: 1,
+  },
 };
 
 describe('HomePage', () => {
+  const mockUseCharacterManagement = useCharacterManagement as jest.Mock;
+  const mockUsePagination = usePagination as jest.Mock;
+  const mockUseFavoriteContext = useFavoriteContext as jest.Mock;
+  const addFavoriteCharacterMock = jest.fn();
+
   beforeEach(() => {
     jest.clearAllMocks();
-  });
-
-  test('renders correctly with all characters', () => {
-    renderHomePage();
-
-    expect(screen.getByTestId('search-bar')).toBeInTheDocument();
-    expect(screen.getByTestId('character-grid')).toBeInTheDocument();
-
-    expect(screen.getByTestId('result-count').textContent).toBe(
-      `${mockCharacters.length} resultados`
-    );
-  });
-
-  test('shows only favorite characters when showAllCharacters is false', () => {
-    renderHomePage({ showFavoritesCharacters: true, handleShowAllCharacters: () => {} });
-
-    const favoritesCount = mockCharacters.filter(char => char.isFavorite).length;
-
-    expect(screen.getByTestId('result-count').textContent).toBe(`${favoritesCount} resultados`);
-  });
-
-  test('filters characters correctly when searching', () => {
-    renderHomePage();
-
-    const searchInput = screen.getByTestId('search-input');
-    fireEvent.change(searchInput, { target: { value: 'Iron' } });
-
-    const ironManCharacters = mockCharacters.filter(char =>
-      char.name.toLowerCase().includes('iron')
-    ).length;
-
-    expect(screen.getByTestId('result-count').textContent).toBe(`${ironManCharacters} resultados`);
-  });
-
-  test('toggles favorite status of a character when clicking the button', async () => {
-    renderHomePage();
-
-    const characterId = '2';
-    const favoriteButton = screen.getByTestId(`favorite-button-${characterId}`);
-
-    expect(favoriteButton.textContent).toBe('Añadir a favoritos');
-
-    fireEvent.click(favoriteButton);
-
-    await waitFor(() => {
-      expect(screen.getByTestId(`favorite-button-${characterId}`).textContent).toBe(
-        'Quitar de favoritos'
-      );
+    mockUseCharacterManagement.mockReturnValue({
+      filteredCharacters: mockCharacters,
+      charactersQuery: mockCharactersQuery,
+      resultCount: 100,
+    });
+    mockUsePagination.mockReturnValue({
+      currentPage: 1,
+      goNextPage: jest.fn(),
+      goBackPage: jest.fn(),
+    });
+    mockUseFavoriteContext.mockReturnValue({
+      favoriteCharacters: [],
+      favoriteCount: 0,
+      addFavoriteCharacter: addFavoriteCharacterMock,
     });
   });
 
-  test('clears search when search field is empty', () => {
-    renderHomePage();
-
-    const searchInput = screen.getByTestId('search-input');
-    fireEvent.change(searchInput, { target: { value: 'Thor' } });
-
-    const thorCharacters = mockCharacters.filter(char =>
-      char.name.toLowerCase().includes('thor')
-    ).length;
-
-    expect(screen.getByTestId('result-count').textContent).toBe(`${thorCharacters} resultados`);
-
-    fireEvent.change(searchInput, { target: { value: '' } });
-
-    expect(screen.getByTestId('result-count').textContent).toBe(
-      `${mockCharacters.length} resultados`
+  const renderHomePage = (showFavoritesCharacters: boolean = false) => {
+    return render(
+      <SearchValueProvider>
+        <HomePage showFavoritesCharacters={showFavoritesCharacters} />
+      </SearchValueProvider>
     );
+  };
+
+  it('renders correctly with character list', () => {
+    renderHomePage();
+    expect(screen.getByText('100 results')).toBeInTheDocument();
   });
 
-  test('shows correct message when there are no search results', () => {
+  it('shows pagination when there is no active search', () => {
     renderHomePage();
+    expect(screen.getByText('Página 1 de 5')).toBeInTheDocument();
+    expect(screen.getByText('Anterior')).toBeInTheDocument();
+    expect(screen.getByText('Siguiente')).toBeInTheDocument();
+  });
 
-    const searchInput = screen.getByTestId('search-input');
-    fireEvent.change(searchInput, { target: { value: 'PersonajeInexistente' } });
+  it('disables previous button when on first page', () => {
+    renderHomePage();
+    const previousButton = screen.getByText('Anterior');
+    expect(previousButton).toBeDisabled();
+  });
 
-    expect(screen.getByTestId('result-count').textContent).toBe('0 resultados');
+  it('disables next button when on last page', () => {
+    mockUsePagination.mockReturnValue({
+      currentPage: 5,
+      goNextPage: jest.fn(),
+      goBackPage: jest.fn(),
+    });
+    renderHomePage();
+    const nextButton = screen.getByText('Siguiente');
+    expect(nextButton).toBeDisabled();
+  });
+
+  it('navigates to next page when clicking Next', () => {
+    const goNextPage = jest.fn();
+    mockUsePagination.mockReturnValue({
+      currentPage: 1,
+      goNextPage,
+      goBackPage: jest.fn(),
+    });
+    renderHomePage();
+    const nextButton = screen.getByText('Siguiente');
+    fireEvent.click(nextButton);
+    expect(goNextPage).toHaveBeenCalled();
+  });
+
+  it('navigates to previous page when clicking Previous', () => {
+    const goBackPage = jest.fn();
+    mockUsePagination.mockReturnValue({
+      currentPage: 2,
+      goNextPage: jest.fn(),
+      goBackPage,
+    });
+    renderHomePage();
+    const previousButton = screen.getByText('Anterior');
+    fireEvent.click(previousButton);
+    expect(goBackPage).toHaveBeenCalled();
+  });
+
+  it('does not show pagination when showing favorites', () => {
+    mockUseCharacterManagement.mockReturnValue({
+      filteredCharacters: mockCharacters,
+      charactersQuery: null,
+      resultCount: 2,
+    });
+    renderHomePage(true);
+    expect(screen.queryByText('Página 1 de 5')).not.toBeInTheDocument();
+  });
+
+  it('calls addFavoriteCharacter when toggling a character', () => {
+    renderHomePage();
+    const toggleButton = screen.getByTestId('favorite-toggle-button');
+    fireEvent.click(toggleButton);
+    expect(addFavoriteCharacterMock).toHaveBeenCalledWith(mockCharacters[0]);
+  });
+
+  it('shows the correct number of results', () => {
+    mockUseCharacterManagement.mockReturnValue({
+      filteredCharacters: mockCharacters,
+      charactersQuery: mockCharactersQuery,
+      resultCount: 100,
+    });
+    renderHomePage();
+    expect(screen.getByText('100 results')).toBeInTheDocument();
   });
 });

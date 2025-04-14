@@ -7,30 +7,30 @@ const TestComponent = () => {
   return <div>Favorite Count: {favoriteCount}</div>;
 };
 
- const mockCharacters: Character[] = [
-    {
-      id: '3',
-      name: 'Captain America',
-      ki: '3000',
-      maxKi: '6000',
-      race: 'Human',
-      gender: 'Male',
-      description: 'Super soldier',
-      image: 'captain-america.jpg',
-      affiliation: 'Avengers',
-    },
-    {
-      id: '4',
-      name: 'Thor',
-      ki: '9000',
-      maxKi: '15000',
-      race: 'Asgardian',
-      gender: 'Male',
-      description: 'God of Thunder',
-      image: 'thor.jpg',
-      affiliation: 'Avengers',
-    },
-  ];
+const mockCharacters: Character[] = [
+  {
+    id: '3',
+    name: 'Captain America',
+    ki: '3000',
+    maxKi: '6000',
+    race: 'Human',
+    gender: 'Male',
+    description: 'Super soldier',
+    image: 'captain-america.jpg',
+    affiliation: 'Avengers',
+  },
+  {
+    id: '4',
+    name: 'Thor',
+    ki: '9000',
+    maxKi: '15000',
+    race: 'Asgardian',
+    gender: 'Male',
+    description: 'God of Thunder',
+    image: 'thor.jpg',
+    affiliation: 'Avengers',
+  },
+];
 
 const TestComponentWithActions = () => {
   const { favoriteCount, addFavoriteCharacter, favoriteCharacters, setAllFavoriteCharacters } =
@@ -40,7 +40,9 @@ const TestComponentWithActions = () => {
       <p>Favorite Count: {favoriteCount}</p>
       <p>
         Favorite Characters:{' '}
-        {favoriteCharacters.length ? favoriteCharacters.map( character => character.id).join(',') : 'Empty list'}
+        {favoriteCharacters.length
+          ? favoriteCharacters.map(character => character.id).join(',')
+          : 'Empty list'}
       </p>
       <button onClick={() => addFavoriteCharacter(mockCharacters[0])}>Add</button>
       <button onClick={() => setAllFavoriteCharacters(mockCharacters)}>Add All</button>

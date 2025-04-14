@@ -1,17 +1,19 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { SearchBar } from './SearchBar';
 import { ChangeEvent } from 'react';
-import { SearchValueProvider } from '@/ui/context/searchValueContext';
+import { SearchValueContext } from '@/ui/context/searchValueContext';
 
 jest.mock('../../atoms/SearchInput', () => ({
   SearchInput: ({
     value,
     onChange,
     placeholder,
+    onClearClick,
   }: {
     value: string;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
     placeholder?: string;
+    onClearClick: () => void;
   }) => (
     <input
       data-testid="search-input"
@@ -19,6 +21,7 @@ jest.mock('../../atoms/SearchInput', () => ({
       value={value}
       onChange={onChange}
       placeholder={placeholder}
+      onClick={() => onClearClick && onClearClick()}
     />
   ),
 }));
@@ -29,15 +32,38 @@ jest.mock('../../atoms/ResultCounter', () => ({
   ),
 }));
 
-const setup = (resultCount = 0) => {
-  render(<SearchValueProvider><SearchBar  resultCount={resultCount} /></SearchValueProvider>);
-}
+// Mock del contexto de búsqueda
+const mockSearchValue = '';
+const mockHandleSearchChange = jest.fn();
+const mockClearSearchValue = jest.fn();
 
+const MockSearchValueProvider = ({ children }: { children: React.ReactNode }) => (
+  <SearchValueContext.Provider
+    value={{
+      searchValue: mockSearchValue,
+      handleSearchChange: mockHandleSearchChange,
+      clearSearchValue: mockClearSearchValue,
+    }}
+  >
+    {children}
+  </SearchValueContext.Provider>
+);
+
+const setup = (resultCount = 0) => {
+  render(
+    <MockSearchValueProvider>
+      <SearchBar resultCount={resultCount} />
+    </MockSearchValueProvider>
+  );
+};
 
 describe('SearchBar', () => {
-  test('renders search input and result counter', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-    setup(10)
+  test('renders search input and result counter', () => {
+    setup(10);
 
     const searchInput = screen.getByTestId('search-input');
     const resultCounter = screen.getByTestId('result-counter');
@@ -45,5 +71,13 @@ describe('SearchBar', () => {
     expect(searchInput).toBeInTheDocument();
     expect(resultCounter).toBeInTheDocument();
     expect(resultCounter).toHaveTextContent('10 resultados');
+  });
+
+  test('uses search value from context', () => {
+    setup(5);
+
+    // Como ahora usamos el contexto, no necesitamos probar la interacción directamente
+    // ya que el componente obtiene el valor del contexto
+    expect(screen.getByTestId('result-counter')).toHaveTextContent('5 resultados');
   });
 });

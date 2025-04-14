@@ -19,7 +19,14 @@ function AppContent() {
     >
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
-          <Route path="/" element={<SearchValueProvider><HomePage showFavoritesCharacters={isFavoritesShowed} /></SearchValueProvider>} />
+          <Route
+            path="/"
+            element={
+              <SearchValueProvider>
+                <HomePage showFavoritesCharacters={isFavoritesShowed} />
+              </SearchValueProvider>
+            }
+          />
           <Route path="/character" element={<CharacterPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

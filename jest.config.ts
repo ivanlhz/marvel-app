@@ -17,6 +17,7 @@ export default {
     '!src/routes.ts',
     '!src/main.tsx',
     '!src/App.tsx',
+    '!src/mocks/**/*.{ts,tsx}',
     '!**/*.spec.{ts,tsx}',
     '!**/*.test.{ts,tsx}',
     '!**/*.mock.{ts,tsx}',
