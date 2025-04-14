@@ -6,7 +6,7 @@
 
 .character-page .container {
   position: relative;
-  width: 1512px;
+  max-width: 1512px;
   margin: 0 auto;
   display: flex;
 }
@@ -16,31 +16,37 @@
   background-color: var(--color-background-dark);
   color: var(--color-text-primary);
   clip-path: polygon(0% 0%, 100% 0%, 100% 94%, 99% 100%, 0% 100%);
+  padding: 0  var(--spacing-xl);
 }
+
+.character-page .hero-section .container {
+  align-items: stretch;
+}
+
 .character-page .detail-hero {
   width: 30%;
 }
 
 .character-page .character-info {
-  padding: var(--spacing-xl);
+  padding-left: var(--spacing-xl);
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
   text-align: start;
+  width: 70%;
+  justify-content: center;
 }
 
-.character-page .favorite-button-container {
-  position: absolute;
-  top: var(--spacing-xl);
-  right: var(--spacing-xl);
-  z-index: 10;
+.character-info__header{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .character-page .comics-section {
   padding: var(--spacing-xl);
-  width: 100%;
   background-color: var(--color-background-white);
 }
 
@@ -108,7 +114,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 834px) {
   .character-page .comics-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: var(--spacing-lg);
@@ -117,12 +123,32 @@
   .character-page .comic-image {
     height: 220px;
   }
+  .character-page .container {
+    width: auto;
+    display: flex;
+    padding: var(--spacing-lg);
+  }
+
+  .character-page .character-info {
+    width: 80%;
+  }
+  .character-page .hero-section {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 94%, 94% 100%, 0% 100%);
+  }
 }
 
 @media (max-width: 480px) {
+  .character-page .container {
+    flex-direction: column;
+  }
+
+  .character-page .detail-hero{
+    width: 100%;
+  }
   .character-page .character-info,
   .character-page .comics-section {
     padding: var(--spacing-lg);
+    width: inherit;
   }
 
   .character-page .comics-grid {
@@ -132,5 +158,19 @@
 
   .character-page .comic-image {
     height: 180px;
+  }
+
+  .character-page .comics-title {
+    font-size: 1.5rem;
+  }
+  .character-page .hero-section, .character-page .comics-section {
+    clip-path: none;
+    padding: 0  var(--spacing-md);
+  }
+  .character-page .hero-section .container, .character-page .comics-section .container {
+    padding: 0;
+  }
+  .character-page .character-info {
+    padding: var(--spacing-xxl) 0 ;
   }
 }

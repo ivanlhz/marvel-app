@@ -48,11 +48,11 @@ const CharacterPage = () => {
       <div className="hero-section">
         <div className="container">
           <CharacterImage src={character.image} alt={character.name} className="detail-hero" />
-          <div className="favorite-button-container">
-            <HeartButton active={isFavorite} onClick={handleFavoriteToggle} />
-          </div>
           <div className="character-info">
-            <CharacterTitle title={character.name} />
+            <div className="character-info__header">
+              <CharacterTitle title={character.name} />
+              <HeartButton active={isFavorite} onClick={handleFavoriteToggle} />
+            </div>
             <CharacterDescription description={character.description} />
           </div>
         </div>
