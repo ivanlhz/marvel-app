@@ -9,18 +9,22 @@ jest.mock('@/ui/hooks/useCharacterManagement');
 jest.mock('@/ui/hooks/pagination/usePagination');
 jest.mock('@/ui/context/favoriteContext');
 
-// Mock del componente CharacterGrid para poder probar el toggle de favoritos
+// Mock of the CharacterGrid component to test the favorite toggle
+const characterGridProps: any[] = [];
 jest.mock('@/ui/components/organisms/CharacterGrid', () => ({
-  CharacterGrid: ({ onFavoriteToggle }: { onFavoriteToggle: (id: string) => void }) => (
-    <div>
-      <button data-testid="favorite-toggle-button" onClick={() => onFavoriteToggle('1')}>
-        Toggle Favorite
-      </button>
-    </div>
-  ),
+  CharacterGrid: (props: any) => {
+    characterGridProps.push(props);
+    return (
+      <div>
+        <button data-testid="favorite-toggle-button" onClick={() => props.onFavoriteToggle('1')}>
+          Toggle Favorite
+        </button>
+      </div>
+    );
+  },
 }));
 
-// Mock de los textos de paginación
+// Mock of pagination texts
 jest.mock('@/ui/components/molecules/SearchBar', () => ({
   SearchBar: ({ resultCount }: { resultCount: number }) => <div>{resultCount} results</div>,
 }));
@@ -152,5 +156,21 @@ describe('HomePage', () => {
     });
     renderHomePage();
     expect(screen.getByText('100 results')).toBeInTheDocument();
+  });
+
+  it('passes favorite IDs correctly to CharacterGrid', () => {
+    const favoriteCharacters = [
+      { id: '1', name: 'Goku', description: 'Saiyan', image: 'goku.jpg' },
+      { id: '2', name: 'Vegeta', description: 'Prince Saiyan', image: 'vegeta.jpg' },
+    ];
+    mockUseFavoriteContext.mockReturnValue({
+      favoriteCharacters,
+      favoriteCount: 2,
+      addFavoriteCharacter: addFavoriteCharacterMock,
+    });
+    renderHomePage();
+    // The last render of CharacterGrid should have the correct favorite ids
+    const lastProps = characterGridProps[characterGridProps.length - 1];
+    expect(lastProps.favoriteIds).toEqual(['1', '2']);
   });
 });

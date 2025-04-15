@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Suspense } from 'react';
 import { FavoriteProvider, useFavoriteContext } from './ui/context/favoriteContext';
 import { Layout } from './ui/components/templates/Layout';
@@ -9,13 +9,20 @@ import { SearchValueProvider } from './ui/context/searchValueContext';
 function AppContent() {
   const { favoriteCount, showFavorites, hideFavorites, isFavoritesShowed } = useFavoriteContext();
   const location = useLocation();
-  const isNotFoundPage = !['/', '/character'].includes(location.pathname);
+  const isCharacterPage = location.pathname === '/' || location.pathname.startsWith('/character');
+
+  const navigate = useNavigate();
+
+  const handleFavoritesClick = () => {
+    showFavorites();
+    navigate('/');
+  };
 
   return (
     <Layout
-      favoriteCount={isNotFoundPage ? undefined : favoriteCount}
+      favoriteCount={isCharacterPage ? favoriteCount : undefined}
       onLogoClick={hideFavorites}
-      onFavoritesClick={isNotFoundPage ? undefined : showFavorites}
+      onFavoritesClick={isCharacterPage ? handleFavoritesClick : undefined}
     >
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
