@@ -6,6 +6,7 @@ import { SearchBar } from '@/ui/components/molecules/SearchBar';
 import { usePagination } from '@/ui/hooks/pagination/usePagination';
 import { useCharacterManagement } from '@/ui/hooks/useCharacterManagement';
 import { useSearchValue } from '@/ui/context/searchValueContext';
+import Pagination from '@/ui/components/molecules/Pagination/Pagination';
 
 interface HomePageProps {
   showFavoritesCharacters: boolean;
@@ -20,7 +21,7 @@ const HomePage = ({ showFavoritesCharacters }: HomePageProps) => {
     showFavoritesCharacters,
     favoriteCharacters
   );
-  const { clearSearchValue, searchValue } = useSearchValue();
+  const { clearSearchValue } = useSearchValue();
 
   useEffect(() => {
     if (showFavoritesCharacters) {
@@ -45,18 +46,13 @@ const HomePage = ({ showFavoritesCharacters }: HomePageProps) => {
           favoriteIds={favoriteCharacters.map(({ id }) => id)}
         />
       </main>
-      {!isFavoritesShowed && charactersQuery && charactersQuery.meta.totalPages > 1 &&(
-        <div className="pagination">
-          <button disabled={currentPage === 1} onClick={goBackPage}>
-            Anterior
-          </button>
-          <span className='pagination-data'>
-            Página {currentPage} de {charactersQuery.meta.totalPages}
-          </span>
-          <button disabled={currentPage === charactersQuery.meta.totalPages} onClick={goNextPage}>
-            Siguiente
-          </button>
-        </div>
+      {!isFavoritesShowed && charactersQuery && charactersQuery.meta.totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={charactersQuery.meta.totalPages}
+          onNextPage={goNextPage}
+          onPreviousPage={goBackPage}
+        />
       )}
     </div>
   );
