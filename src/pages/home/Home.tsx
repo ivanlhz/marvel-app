@@ -12,7 +12,7 @@ interface HomePageProps {
 }
 
 const HomePage = ({ showFavoritesCharacters }: HomePageProps) => {
-  const { addFavoriteCharacter, favoriteCharacters } = useFavoriteContext();
+  const { addFavoriteCharacter, favoriteCharacters, isFavoritesShowed } = useFavoriteContext();
   const { currentPage, goNextPage, goBackPage } = usePagination();
 
   const { filteredCharacters, charactersQuery, resultCount } = useCharacterManagement(
@@ -45,12 +45,12 @@ const HomePage = ({ showFavoritesCharacters }: HomePageProps) => {
           favoriteIds={favoriteCharacters.map(({ id }) => id)}
         />
       </main>
-      {!searchValue && charactersQuery && (
+      {!isFavoritesShowed && charactersQuery && charactersQuery.meta.totalPages > 1 &&(
         <div className="pagination">
           <button disabled={currentPage === 1} onClick={goBackPage}>
             Anterior
           </button>
-          <span>
+          <span className='pagination-data'>
             Página {currentPage} de {charactersQuery.meta.totalPages}
           </span>
           <button disabled={currentPage === charactersQuery.meta.totalPages} onClick={goNextPage}>

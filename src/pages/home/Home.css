@@ -27,6 +27,10 @@
   transition: background-color 0.3s;
 }
 
+.pagination-data {
+  color: var(--color-text-dark);
+}
+
 .pagination button:hover:not(:disabled) {
   background-color: var(--color-primary);
 }
