@@ -28,8 +28,13 @@ describe('CharacterHero', () => {
   const mockCharacter = {
     id: '1',
     name: 'Goku',
+    ki: '50000',
+    maxKi: '100000',
+    race: 'Saiyan',
+    gender: 'Male',
     description: 'Saiyan del Planeta Vegeta',
     image: 'goku.jpg',
+    affiliation: 'Z Warriors',
     transformations: [],
   };
 
