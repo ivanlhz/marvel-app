@@ -1,8 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MemoryRouter } from 'react-router-dom';
 import HomePage from './Home';
-import { FavoriteProvider } from '@/ui/context/favoriteContext';
 import { SearchValueProvider } from '@/ui/context/searchValueContext';
 import { useCharacterManagement } from '@/ui/hooks/useCharacterManagement';
 import { usePagination } from '@/ui/hooks/pagination/usePagination';

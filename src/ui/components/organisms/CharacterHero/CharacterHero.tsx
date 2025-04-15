@@ -2,7 +2,7 @@ import React from 'react';
 import CharacterImage from '@/ui/components/atoms/CharacterImage';
 import CharacterHeader from '@/ui/components/molecules/CharacterHeader/CharacterHeader';
 import CharacterDescription from '@/ui/components/atoms/CharacterDescription/CharacterDescription';
-import { Character } from '@/core/domain/models/Character';
+import { Character } from '@/core/dbapi/domain/models/Character';
 import './CharacterHero.css';
 
 interface CharacterHeroProps {

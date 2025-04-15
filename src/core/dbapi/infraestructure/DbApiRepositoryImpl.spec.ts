@@ -109,7 +109,7 @@ describe('DbApiRepository', () => {
 
       (fetchData as jest.Mock).mockResolvedValueOnce(mockResponse);
 
-      const result = await repository.getCharacterById(1);
+      const result = await repository.getCharacterById('1');
       expect(result).toEqual(mockResponse);
       expect(result.value?.name).toBe('Goku');
       expect(result.value?.transformations.length).toBe(1);
@@ -120,7 +120,7 @@ describe('DbApiRepository', () => {
     test('should return an error', async () => {
       const error = new Error('Error 404');
       (fetchData as jest.Mock).mockRejectedValueOnce(error);
-      await expect(repository.getCharacterById(999)).rejects.toEqual(error);
+      await expect(repository.getCharacterById('999')).rejects.toEqual(error);
       expect(fetchData).toHaveBeenCalledWith(`${BASE_URL}/characters/999`);
     });
   });

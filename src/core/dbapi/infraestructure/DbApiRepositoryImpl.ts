@@ -19,7 +19,7 @@ export const createDbApiRepository = (): DbApiRepository => {
   };
 
   const getCharacterById = async (
-    id: number
+    id: string
   ): Promise<Result<CharacterWithTransformationsAndPlanet>> => {
     const url = `${BASE_URL}/characters/${id}`;
     return fetchData<CharacterWithTransformationsAndPlanet>(url);

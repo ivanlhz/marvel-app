@@ -2,7 +2,7 @@ import React from 'react';
 import TransformationTitle from '@/ui/components/atoms/TransformationTitle/TransformationTitle';
 import NoTransformationsMessage from '@/ui/components/atoms/NoTransformationsMessage/NoTransformationsMessage';
 import TransformationCard from '@/ui/components/molecules/TransformationCard/TransformationCard';
-import { Transformation } from '@/core/domain/models/Character';
+import { Transformation } from '@/core/dbapi/domain/models/Transformation';
 import './TransformationsList.css';
 
 interface TransformationsListProps {
