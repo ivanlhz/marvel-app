@@ -1,0 +1,7 @@
+.transformation-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-text-dark);
+}

@@ -14,23 +14,23 @@
   transform: translateY(-5px);
 }
 
-.character-card .character-image {
+.character-card__image-container {
   width: 100%;
   height: 185px;
 }
 
-.character-card .character-image img {
+.character-card__image-container img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   transition: transform var(--transition-normal);
 }
 
-.character-card:hover .character-image img {
+.character-card:hover .character-card__image-container img {
   transform: scale(1.05);
 }
 
-.character-card .character-info {
+.character-card__info {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -39,7 +39,7 @@
   position: relative;
 }
 
-.character-card .character-info::before {
+.character-card__info::before {
   content: '';
   position: absolute;
   top: 0;
@@ -50,11 +50,12 @@
   transition: height 0.3s ease;
   z-index: 1;
 }
-.character-card:hover .character-info::before {
+
+.character-card:hover .character-card__info::before {
   height: 100%;
 }
 
-.character-card .character-name {
+.character-card__name {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
@@ -67,7 +68,7 @@
   z-index: 2;
 }
 
-.character-card .favorite-button {
+.character-card__favorite-button {
   background: transparent;
   border: none;
   cursor: pointer;
@@ -79,11 +80,11 @@
   z-index: 2;
 }
 
-.character-card .favorite-button:hover {
+.character-card__favorite-button:hover {
   transform: scale(1.1);
 }
 
-.character-card .favorite-button .heart-icon {
+.character-card__favorite-button .heart-icon {
   width: 20px;
   height: 20px;
   fill: var(--color-favorite-inactive);
@@ -92,18 +93,22 @@
   transition: fill var(--transition-fast);
 }
 
-.character-card .favorite-button .heart-icon.outline {
+.character-card__favorite-button .heart-icon.outline {
   fill: white;
   stroke: white;
   transition: all 0.2s ease;
 }
 
-.character-card .favorite-button.active .heart-icon.filled {
+.character-card__favorite-button.active .heart-icon.filled {
   fill: var(--color-favorite);
   stroke-width: 0;
   transition: all 0.2s ease;
 }
 
-.character-card:hover .favorite-button.active .heart-icon.filled {
+.character-card:hover .character-card__favorite-button.active .heart-icon.filled {
   fill: var(--color-text-primary);
+}
+
+.character-card__favorite-button.active + .character-card__info::before {
+  height: 100%;
 }

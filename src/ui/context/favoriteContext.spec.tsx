@@ -33,8 +33,15 @@ const mockCharacters: Character[] = [
 ];
 
 const TestComponentWithActions = () => {
-  const { isFavoritesShowed, favoriteCount, addFavoriteCharacter, favoriteCharacters, setAllFavoriteCharacters, showFavorites, hideFavorites } =
-    useFavoriteContext();
+  const {
+    isFavoritesShowed,
+    favoriteCount,
+    addFavoriteCharacter,
+    favoriteCharacters,
+    setAllFavoriteCharacters,
+    showFavorites,
+    hideFavorites,
+  } = useFavoriteContext();
   return (
     <div>
       <p>Favorite Count: {favoriteCount}</p>
@@ -85,13 +92,13 @@ describe('FavoriteContext', () => {
     expect(screen.getByText('Show Favorites: no')).toBeInTheDocument();
     const showButton = screen.getByText('Show favorites');
     expect(showButton).toBeInTheDocument();
-    fireEvent.click(showButton)
+    fireEvent.click(showButton);
 
     const hideButton = screen.getByText('Hide favorites');
     expect(hideButton).toBeInTheDocument();
-    fireEvent.click(hideButton)
+    fireEvent.click(hideButton);
     expect(screen.getByText('Show Favorites: no')).toBeInTheDocument();
-  })
+  });
 
   it('should handle the favorite characters', () => {
     const ContainerTestComponent = () => {

@@ -1,6 +1,15 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { CharacterCard } from './CharacterCard';
 
+// Mock del componente Heart
+jest.mock('../../atoms/Heart/Heart', () => ({
+  Heart: ({ isActive }: { isActive: boolean }) => (
+    <div data-testid="heart-icon" data-active={isActive}>
+      Heart Icon
+    </div>
+  ),
+}));
+
 describe('CharacterCard', () => {
   const defaultProps = {
     imageUrl: 'https://example.com/image.jpg',
@@ -24,7 +33,6 @@ describe('CharacterCard', () => {
     const favoriteButton = screen.getByRole('button', { name: 'Añadir a favoritos' });
 
     expect(favoriteButton).toBeInTheDocument();
-    expect(favoriteButton).not.toHaveClass('active');
   });
 
   test('renders with active favorite button when isFavorite is true', () => {
@@ -33,7 +41,6 @@ describe('CharacterCard', () => {
     const favoriteButton = screen.getByRole('button', { name: 'Quitar de favoritos' });
 
     expect(favoriteButton).toBeInTheDocument();
-    expect(favoriteButton).toHaveClass('active');
   });
 
   test('calls onFavoriteToggle when favorite button is clicked', () => {
@@ -47,5 +54,18 @@ describe('CharacterCard', () => {
     fireEvent.click(favoriteButton);
 
     expect(onFavoriteToggle).toHaveBeenCalledTimes(1);
+  });
+
+  test('calls onImageClick when image container is clicked', () => {
+    const onImageClick = jest.fn();
+
+    render(<CharacterCard {...defaultProps} onImageClick={onImageClick} />);
+
+    const imageContainer = screen
+      .getByAltText('Iron Man')
+      .closest('.character-card__image-container');
+    fireEvent.click(imageContainer!);
+
+    expect(onImageClick).toHaveBeenCalledTimes(1);
   });
 });

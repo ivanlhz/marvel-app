@@ -19,13 +19,17 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 }) => {
   return (
     <div className="character-card">
-      <div className="character-image" onClick={onImageClick} style={{ cursor: 'pointer' }}>
+      <div
+        className="character-card__image-container"
+        onClick={onImageClick}
+        style={{ cursor: 'pointer' }}
+      >
         <img src={imageUrl} alt={name} />
       </div>
-      <div className="character-info">
-        <h3 className="character-name">{name}</h3>
+      <div className="character-card__info">
+        <h3 className="character-card__name">{name}</h3>
         <button
-          className={`favorite-button ${isFavorite ? 'active' : ''}`}
+          className={`character-card__favorite-button ${isFavorite ? 'active' : ''}`}
           onClick={onFavoriteToggle}
           aria-label={isFavorite ? 'Quitar de favoritos' : 'Añadir a favoritos'}
         >

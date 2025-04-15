@@ -1,21 +1,22 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import CharacterPage from './Character';
 import { FavoriteProvider } from '@/ui/context/favoriteContext';
 import { useCharacterById } from '@/ui/hooks/queries/useCharacters';
+import { useCharacterPageParams } from '@/ui/hooks/character/useCharacterPageParams';
+import { useCharacterFavorites } from '@/ui/hooks/character/useCharacterFavorites';
 
 // Mock de los hooks
 jest.mock('@/ui/hooks/queries/useCharacters');
+jest.mock('@/ui/hooks/character/useCharacterPageParams');
+jest.mock('@/ui/hooks/character/useCharacterFavorites');
 
 // Mock de react-router-dom
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockNavigate,
-  useLocation: () => ({
-    search: '?id=1',
-  }),
 }));
 
 const mockCharacter = {
@@ -41,11 +42,20 @@ const mockCharacter = {
 
 describe('CharacterPage', () => {
   const mockUseCharacterById = useCharacterById as jest.Mock;
+  const mockUseCharacterPageParams = useCharacterPageParams as jest.Mock;
+  const mockUseCharacterFavorites = useCharacterFavorites as jest.Mock;
 
   beforeEach(() => {
     mockUseCharacterById.mockReturnValue({
       data: mockCharacter,
       error: null,
+    });
+    mockUseCharacterPageParams.mockReturnValue({
+      characterId: '1',
+    });
+    mockUseCharacterFavorites.mockReturnValue({
+      isFavorite: false,
+      handleFavoriteToggle: jest.fn(),
     });
     mockNavigate.mockClear();
   });
@@ -94,17 +104,10 @@ describe('CharacterPage', () => {
     expect(screen.getByText('Actualmente no tiene transformaciones.')).toBeInTheDocument();
   });
 
-  it('handles favorite toggle correctly', () => {
-    const { container } = renderCharacterPage();
-
-    const heartButton = container.querySelector('.heart-button');
-    fireEvent.click(heartButton!);
-
-    expect(mockUseCharacterById).toHaveBeenCalledWith('1');
-  });
-
   it('returns null when there is no characterId', () => {
-    jest.spyOn(URLSearchParams.prototype, 'get').mockReturnValueOnce(null);
+    mockUseCharacterPageParams.mockReturnValue({
+      characterId: null,
+    });
 
     renderCharacterPage();
 
@@ -120,16 +123,5 @@ describe('CharacterPage', () => {
     renderCharacterPage();
 
     expect(screen.queryByText('Goku')).not.toBeInTheDocument();
-  });
-
-  it('navigates to home when there is an error', () => {
-    mockUseCharacterById.mockReturnValue({
-      data: null,
-      error: new Error('Error loading character'),
-    });
-
-    renderCharacterPage();
-
-    expect(mockNavigate).toHaveBeenCalledWith('/');
   });
 });

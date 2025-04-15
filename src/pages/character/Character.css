@@ -11,129 +11,21 @@
   display: flex;
 }
 
-.character-page .hero-section {
-  overflow: hidden;
-  background-color: var(--color-background-dark);
-  color: var(--color-text-primary);
-  clip-path: polygon(0% 0%, 100% 0%, 100% 94%, 99% 100%, 0% 100%);
-  padding: 0  var(--spacing-xl);
-}
-
-.character-page .hero-section .container {
-  align-items: stretch;
-}
-
-.character-page .detail-hero {
-  width: 30%;
-}
-
-.character-page .character-info {
-  padding-left: var(--spacing-xl);
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-  text-align: start;
-  width: 70%;
-  justify-content: center;
-}
-
-.character-info__header{
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.character-page .comics-section {
+.comics-section {
   padding: var(--spacing-xl);
   background-color: var(--color-background-white);
 }
 
-.character-page .comics-section .container {
+.comics-section .container {
   flex-direction: column;
   text-align: start;
 }
 
-.character-page .comics-title {
-  font-size: 1.8rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  margin-bottom: var(--spacing-lg);
-  color: var(--color-text-dark);
-}
-
-.character-page .comics-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--spacing-xl);
-  overflow-x: scroll;
-  padding: var(--spacing-md) 0;
-}
-
-.character-page .comic-item {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--color-background-card);
-  border-radius: var(--border-radius-md);
-  overflow: hidden;
-  transition: var(--transition-normal);
-}
-
-.character-page .comic-item:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--box-shadow);
-}
-
-.character-page .comic-image {
-  width: 100%;
-  height: 280px;
-  overflow: hidden;
-}
-
-.character-page .comic-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top;
-}
-
-.character-page .comic-info {
-  padding: var(--spacing-md);
-}
-
-.character-page .comic-title {
-  font-size: 0.9rem;
-  font-weight: bold;
-  margin-bottom: var(--spacing-xs);
-}
-
-.character-page .comic-year {
-  font-size: 0.8rem;
-  color: var(--color-text-secondary);
-}
-
-/* Responsive adjustments */
 @media (max-width: 834px) {
-  .character-page .comics-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: var(--spacing-lg);
-  }
-
-  .character-page .comic-image {
-    height: 220px;
-  }
   .character-page .container {
     width: auto;
     display: flex;
     padding: var(--spacing-lg);
-  }
-
-  .character-page .character-info {
-    width: 80%;
-  }
-  .character-page .hero-section {
-    clip-path: polygon(0% 0%, 100% 0%, 100% 94%, 94% 100%, 0% 100%);
   }
 }
 
@@ -142,35 +34,8 @@
     flex-direction: column;
   }
 
-  .character-page .detail-hero{
-    width: 100%;
-  }
-  .character-page .character-info,
-  .character-page .comics-section {
+  .comics-section {
     padding: var(--spacing-lg);
     width: inherit;
-  }
-
-  .character-page .comics-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: var(--spacing-md);
-  }
-
-  .character-page .comic-image {
-    height: 180px;
-  }
-
-  .character-page .comics-title {
-    font-size: 1.5rem;
-  }
-  .character-page .hero-section, .character-page .comics-section {
-    clip-path: none;
-    padding: 0  var(--spacing-md);
-  }
-  .character-page .hero-section .container, .character-page .comics-section .container {
-    padding: 0;
-  }
-  .character-page .character-info {
-    padding: var(--spacing-xxl) 0 ;
   }
 }
