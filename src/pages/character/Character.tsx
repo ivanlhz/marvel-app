@@ -12,11 +12,7 @@ const CharacterPage = () => {
   useCharacterNavigation(characterId, error);
   const { isFavorite, handleFavoriteToggle } = useCharacterFavorites(characterId, character);
 
-  if (!characterId) {
-    return null;
-  }
-
-  if (!character) {
+  if (!characterId || !character) {
     return null;
   }
 
